@@ -19,9 +19,17 @@
         "tailwindcss": "^3.1.0",
         "telegram": "^2.11.4",
         "vite": "^3.0.0",
-        "vue": "^3.2.31"
+        "vue": "^3.2.39"
     },
     "dependencies": {
-        "buffer": "^6.0.3"
+        "@chenfengyuan/vue-qrcode": "^2.0.0",
+        "buffer": "^6.0.3",
+        "fluent-ffmpeg": "^2.1.2",
+        "laravel-echo": "^1.14.0",
+        "pusher-js": "^7.4.0",
+        "qrcode": "^1.5.1",
+        "qrcode-reader-vue3": "^3.1.2",
+        "vue3-qr-code-styling": "^1.4.6",
+        "whatsapp-web.js": "^1.17.1"
     }
 }

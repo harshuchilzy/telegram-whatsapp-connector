@@ -17,7 +17,7 @@ class MessageController extends Controller
             'message' => $message,
             'sender' => $sender
         ]);
-        return response()->json(['update'], 200);
+        return response()->json(['status' => 'success'], 200);
     }
 
     public function inbox()
