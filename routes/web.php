@@ -44,10 +44,12 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     Route::get('telegram/settings', [\App\Http\Controllers\TelegramController::class, 'settings'])->name('telegram.settings');
     Route::post('telegram/settings', [\App\Http\Controllers\TelegramController::class, 'storeSettings'])->name('telegram.settings.store');
 
-
     Route::post('/session/store', [\App\Http\Controllers\UserController::class, 'authSessionKeys'])->name('store.sessions');
 
     Route::get('inbox', [\App\Http\Controllers\API\MessageController::class, 'inbox'])->name('inbox');
+
+    // FIlters/Parsers
+    Route::resource('filters', \App\Http\Controllers\FilterController::class);
 });
 
 
