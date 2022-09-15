@@ -14,7 +14,7 @@
         system_status: '',
     })
     function submit(){
-        Inertia.post(route('settigs.store'), form);
+        Inertia.post(route('settings.store'), form);
     }
  </script>
     
@@ -92,7 +92,7 @@
                                 </div>
                                  <div class="mb-4 md:items-center md:flex">
                                     <label class="md:w-2/3 block text-gray-500 font-bold mt-5">
-                                    <input class="mr-2 leading-tight" type="checkbox" id="exact_match"  v-model="form.exact_match" checked>
+                                    <input class="mr-2 leading-tight" type="checkbox" id="system_status"  v-model="form.system_status" checked>
                                     <span class="text-sm">
                                         System Status
                                     </span>

@@ -10,4 +10,8 @@ class SettingsController extends Controller
     {
         return inertia()->render('Settings/Settings');
     }
+    public function store(Request $request)
+    {
+        return $request->all();
+    }
 }
