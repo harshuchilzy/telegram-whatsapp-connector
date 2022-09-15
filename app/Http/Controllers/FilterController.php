@@ -72,7 +72,14 @@ class FilterController extends Controller
      */
     public function edit(Filter $filter)
     {
-        //
+        return inertia()->render('Filters/Edit', [
+            'filter' => [
+                'id' => $filter->id,
+                'match_case' => $filter->match_case,
+                'exact_match' => $filter->exact_match,
+                'type' => $filter->type
+            ]
+        ]);
     }
 
     /**
@@ -84,7 +91,15 @@ class FilterController extends Controller
      */
     public function update(Request $request, Filter $filter)
     {
-        //
+        request()->validate([
+            'match_case' => 'required',
+            'exact_match' => 'required',
+            'type' => 'required',
+        ]);
+    
+        $filter->update($request->all());
+    
+        return redirect()->route('filters.index');
     }
 
     /**
