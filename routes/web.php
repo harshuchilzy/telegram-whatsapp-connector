@@ -50,6 +50,9 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     // FIlters/Parsers
     Route::resource('filters', \App\Http\Controllers\FilterController::class);
+
+    // MetaSettings/Parsers
+    Route::resource('meta_settigs', \App\Http\Controllers\MetaSettingController::class);
 });
 
 
