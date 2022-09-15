@@ -26,7 +26,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6 bg-white border-b border-gray-200">
-                            <a class="float-right " href="#">Add</a>
+                            <a class="float-right " :href="route('filters.create')">Add</a>
                             <table class="table w-full text-sm text-left text-gray-500 dark:text-gray-400" id="datatable_1">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-slate-700 dark:text-gray-400">
                                     <tr>

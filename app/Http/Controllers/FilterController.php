@@ -38,7 +38,19 @@ class FilterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        request()->validate([
+            'match_case' => 'required',
+            'exact_match' => 'required',
+            'type' => 'required',
+        ]);
+        $input = $request->all();
+        Filter::create([
+            'match_case' => $input['match_case'],
+            'exact_match' => $input['exact_match'],
+            'type' => $input['type'],
+        ]);
+
+        return redirect()->route('filters.index');
     }
 
     /**

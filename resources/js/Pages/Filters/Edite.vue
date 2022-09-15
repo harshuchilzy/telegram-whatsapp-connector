@@ -1,19 +1,19 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { Head, useForm } from '@inertiajs/inertia-vue3';
-    import { Inertia } from '@inertiajs/inertia';
-
-
 
     const form = useForm({
         match_case: '',
         exact_match: '',
         type: ''
     })
+    props: ({
+        filters: Object,
+    })
     function submit(){
-        Inertia.post(route('filters.store'), form);
+
     }
- </script>
+    </script>
     
     <template>
         <Head title="Dashboard" />
@@ -21,7 +21,7 @@
         <AuthenticatedLayout>
             <template #header>
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    Add Filter
+                    Edite Filter
                 </h2>
             </template>
     
@@ -34,14 +34,13 @@
                                     <label class="block text-gray-700 text-sm font-bold mb-2" for="match_case">
                                         Match case
                                     </label>
-                                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="match_case" name="match_case" type="text" v-model="form.match_case"
- placeholder="Filter word">
+                                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="match_case" type="text" placeholder="Filter word">
                                 </div>
 
                                 <div class="md:flex md:items-center mb-6">
                                     <div class="md:w-1/3"></div>
                                     <label class="md:w-2/3 block text-gray-500 font-bold">
-                                    <input class="mr-2 leading-tight" type="checkbox" id="exact_match" name="exact_match" v-model="form.exact_match">
+                                    <input class="mr-2 leading-tight" type="checkbox">
                                     <span class="text-sm">
                                         Exact match?
                                     </span>
@@ -53,7 +52,7 @@
                                         Type of the filter
                                     </label>
                                     <div class="relative">
-                                        <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="type" name="type" v-model="form.type">
+                                        <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
                                             <option value="trade">Trade filter</option>
                                             <option value="currency">Currency pair</option>
                                         </select>
