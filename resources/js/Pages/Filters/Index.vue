@@ -2,13 +2,15 @@
     import Pagination from '@/Components/Pagination.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { Head, useForm } from '@inertiajs/inertia-vue3';
+    import { Inertia } from '@inertiajs/inertia';
+
 
     const props = defineProps({
         filters: Object
     })
 
     function destroy(id){
-
+        Inertia.delete(route('filters.destroy', id));
     }
     </script>
     

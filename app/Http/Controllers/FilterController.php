@@ -110,6 +110,7 @@ class FilterController extends Controller
      */
     public function destroy(Filter $filter)
     {
-        //
+        $filter->delete();
+        return redirect()->route('filters.index');
     }
 }
