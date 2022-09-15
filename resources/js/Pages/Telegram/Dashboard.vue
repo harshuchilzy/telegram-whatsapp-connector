@@ -25,10 +25,9 @@ const form = useForm({
     session: ''
 });
 
-const apiId = parseInt(props.appId)
-const apiHash = props.appHash
-// var phone = '+94765373144';
-var stringSession = new StringSession(props.user.telegram_session)
+const apiId = parseInt(props.appId);
+const apiHash = props.appHash;
+var stringSession = new StringSession(props.user.telegram_session);
 
 const client = ref();
 client.value = new TelegramClient(stringSession, apiId, apiHash, {
