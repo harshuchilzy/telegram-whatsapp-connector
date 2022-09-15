@@ -50,11 +50,10 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     // FIlters/Parsers
     Route::resource('filters', \App\Http\Controllers\FilterController::class);
-
-    // MetaSettings/Parsers
-    Route::resource('meta_settigs', \App\Http\Controllers\MetaSettingController::class);
+    // Settings
+    Route::resource('settings', \App\Http\Controllers\SettingsController::class);
 });
 
 
 
-require __DIR__.'/auth.php';
+require __DIR__.'/auth.php'; 
