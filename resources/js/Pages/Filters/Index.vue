@@ -1,12 +1,12 @@
 <script setup>
     import Pagination from '@/Components/Pagination.vue';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { Head, useForm } from '@inertiajs/inertia-vue3';
     import { Inertia } from '@inertiajs/inertia';
 
-
     const props = defineProps({
-        filters: Object
+        tradingFilters: Object,
+        currencyFilters: Object
     })
 
     function destroy(id){
@@ -48,7 +48,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="filter in filters.data" :key="filter.id" class="bg-white border-b border-gray-100 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-slate-700/50">
+                                    <tr v-for="filter in tradingFilters.data" :key="filter.id" class="bg-white border-b border-gray-100 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-slate-700/50">
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                             {{ filter.match_case }}
                                         </th>
@@ -67,7 +67,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                     </tr>
                                 </tbody>
                             </table> 
-                            <Pagination class="my-2" :links="filters.links"/>
+                            <Pagination class="my-2" :links="tradingFilters.links"/>
                         </div>
                         <div class="p-6 bg-white border-b border-gray-200">
                             <a class="float-right " :href="route('filters.create')">Add</a>
@@ -89,7 +89,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="filter in filters.data" :key="filter.id" class="bg-white border-b border-gray-100 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-slate-700/50">
+                                    <tr v-for="filter in currencyFilters.data" :key="filter.id" class="bg-white border-b border-gray-100 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-slate-700/50">
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                             {{ filter.match_case }}
                                         </th>
@@ -108,7 +108,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                     </tr>
                                 </tbody>
                             </table> 
-                            <Pagination class="my-2" :links="filters.links"/>
+                            <Pagination class="my-2" :links="currencyFilters.links"/>
                         </div>
                     </div>
                         

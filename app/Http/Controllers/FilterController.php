@@ -14,9 +14,12 @@ class FilterController extends Controller
      */
     public function index()
     {
-        $filters = Filter::paginate(15);
+        $currencyFilters = Filter::where('type', 'currency')->paginate(15);
+        $tradingFilters = Filter::where('type', 'trade')->paginate(15);
+
         return inertia()->render('Filters/Index', [
-            'filters' => $filters
+            'currencyFilters' => $currencyFilters,
+            'tradingFilters' => $tradingFilters
         ]);
     }
 
@@ -40,7 +43,6 @@ class FilterController extends Controller
     {
         request()->validate([
             'match_case' => 'required',
-            'exact_match' => 'required',
             'type' => 'required',
         ]);
         $input = $request->all();

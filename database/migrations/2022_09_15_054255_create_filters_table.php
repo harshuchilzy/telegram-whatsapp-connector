@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('filters', function (Blueprint $table) {
             $table->id();
             $table->string('match_case');
-            $table->boolean('exact_match')->default(0);
+            $table->boolean('exact_match')->default(0)->nullable();
             $table->string('type');
             $table->timestamps();
         });
