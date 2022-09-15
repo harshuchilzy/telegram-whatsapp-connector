@@ -29,7 +29,7 @@
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="p-6 bg-white border-b border-gray-200">
-                            <a class="float-right " :href="route('filters.create')">Add</a>
+                            <a class="float-right" :href="route('filters.create')">Add Trading Filters</a>
                             <table class="table w-full text-sm text-left text-gray-500 dark:text-gray-400" id="datatable_1">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-slate-700 dark:text-gray-400">
                                     <tr>
@@ -48,8 +48,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="filter in tradingFilters.data" :key="filter.id" class="bg-white border-b border-gray-100 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-slate-700/50">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                                    <tr v-for="filter in tradingFilters.data" :key="filter.id" class="bg-white border-b border-gray-100   hover:bg-gray-50 dark:hover:bg-slate-700/50">
+                                        <th scope="row" class="px-6 py-4 font-medium text-black dark:text-dark whitespace-nowrap">
                                             {{ filter.match_case }}
                                         </th>
                                         <td class="px-6 py-4">
@@ -70,7 +70,7 @@
                             <Pagination class="my-2" :links="tradingFilters.links"/>
                         </div>
                         <div class="p-6 bg-white border-b border-gray-200">
-                            <a class="float-right " :href="route('filters.create')">Add</a>
+                            <a class="float-right" :href="route('filters.create')">Add Currency Pairs</a>
                             <table class="table w-full text-sm text-left text-gray-500 dark:text-gray-400" id="datatable_1">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-slate-700 dark:text-gray-400">
                                     <tr>
@@ -89,8 +89,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="filter in currencyFilters.data" :key="filter.id" class="bg-white border-b border-gray-100 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-slate-700/50">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                                    <tr v-for="filter in currencyFilters.data" :key="filter.id" class="bg-white border-b border-gray-100  hover:text-white  hover:bg-dark dark:hover:bg-slate-700/50">
+                                        <th scope="row" class="px-6 py-4 font-medium text-black dark:text-dark whitespace-nowrap">
                                             {{ filter.match_case }}
                                         </th>
                                         <td class="px-6 py-4">
