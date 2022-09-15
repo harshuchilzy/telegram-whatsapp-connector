@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MetaSetting;
+use App\Models\Action;
 use Illuminate\Http\Request;
 
-class MetaSettingController extends Controller
+class ActionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class MetaSettingController extends Controller
      */
     public function index()
     {
-        return inertia()->render('Settings/Settings');
+        //
     }
 
     /**
@@ -41,10 +41,10 @@ class MetaSettingController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\MetaSetting  $metaSetting
+     * @param  \App\Models\Action  $action
      * @return \Illuminate\Http\Response
      */
-    public function show(MetaSetting $metaSetting)
+    public function show(Action $action)
     {
         //
     }
@@ -52,10 +52,10 @@ class MetaSettingController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\MetaSetting  $metaSetting
+     * @param  \App\Models\Action  $action
      * @return \Illuminate\Http\Response
      */
-    public function edit(MetaSetting $metaSetting)
+    public function edit(Action $action)
     {
         //
     }
@@ -64,10 +64,10 @@ class MetaSettingController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\MetaSetting  $metaSetting
+     * @param  \App\Models\Action  $action
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, MetaSetting $metaSetting)
+    public function update(Request $request, Action $action)
     {
         //
     }
@@ -75,10 +75,10 @@ class MetaSettingController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\MetaSetting  $metaSetting
+     * @param  \App\Models\Action  $action
      * @return \Illuminate\Http\Response
      */
-    public function destroy(MetaSetting $metaSetting)
+    public function destroy(Action $action)
     {
         //
     }

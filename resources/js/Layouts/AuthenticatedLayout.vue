@@ -33,6 +33,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('meta_settigs.index')" >
                                     Settings
                                 </NavLink>
+                                <NavLink :href="route('filters.index')" >
+                                    Filters
+                                </NavLink>
                             </div>
                         </div>
 
