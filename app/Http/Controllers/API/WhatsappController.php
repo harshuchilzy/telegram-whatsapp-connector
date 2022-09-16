@@ -12,9 +12,6 @@ class WhatsappController extends Controller
     public function receiveQR(Request $request)
     {   
         $qrCode = $request->get('qr');
-        Log::info($qrCode);
-        Log::info('QR received');
-
         event(new WhatsappEvent($qrCode));
         return response()->json(['status' => 'success'], 200);
     }

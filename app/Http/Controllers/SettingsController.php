@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class SettingsController extends Controller
 {
-    public function index()
+    public function settings()
     {
         return inertia()->render('Settings/Settings');
     }
@@ -20,6 +20,6 @@ class SettingsController extends Controller
             setting()->set($label, $setting);
             setting()->save();
         }
-        return redirect()->route('settings.index');
+        return redirect()->route('settings');
     }
 }

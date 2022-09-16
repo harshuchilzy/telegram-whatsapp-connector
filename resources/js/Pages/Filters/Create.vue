@@ -3,6 +3,10 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
 
+const props = defineProps({
+    errors: Object
+})
+
 const form = useForm({
     match_case: '',
     exact_match: '',
@@ -34,6 +38,7 @@ function submit() {
                                     Match case
                                 </label>
                                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="match_case" name="match_case" type="text" v-model="form.match_case" placeholder="Filter word">
+                                <span v-if="props.errors.match_case" class="text-red-500 text-sm">{{props.errors.match_case}}</span>
                             </div>
 
                             <div class="md:flex md:items-center mb-6">
@@ -55,6 +60,8 @@ function submit() {
                                         <option value="currency">Currency pair</option>
                                     </select>
                                 </div>
+                                <span v-if="props.errors.type" class="text-red-500 text-sm">{{props.errors.type}}</span>
+
                             </div>
 
                             <div class="flex items-center justify-between">

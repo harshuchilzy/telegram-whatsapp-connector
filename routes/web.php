@@ -51,7 +51,12 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     // FIlters/Parsers
     Route::resource('filters', \App\Http\Controllers\FilterController::class);
     // Settings
-    Route::resource('settings', \App\Http\Controllers\SettingsController::class);
+    Route::get('settings', [\App\Http\Controllers\SettingsController::class, 'settings'])->name('settings');
+    Route::post('settings', [\App\Http\Controllers\SettingsController::class, 'store'])->name('settings.store');
+
+    // Test Location
+    Route::get('test', [\App\Http\Controllers\API\MessageController::class, 'test']);
+
 });
 
 
