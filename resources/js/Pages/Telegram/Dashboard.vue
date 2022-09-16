@@ -1,10 +1,10 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+// import InputError from '@/Components/InputError.vue';
+// import InputLabel from '@/Components/InputLabel.vue';
+// import PrimaryButton from '@/Components/PrimaryButton.vue';
+// import TextInput from '@/Components/TextInput.vue';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import VueQrcode from '@chenfengyuan/vue-qrcode';
@@ -72,6 +72,7 @@ async function eventPrint(event) {
             text: message.text
         });
 
+        // Replace with env WHATSAPP_SERVER OR move this to an event / controller
         const whatsappResult = await axios.post('http://localhost:3001/forward-msg',{
             to: '717765766',
             message: message.text
