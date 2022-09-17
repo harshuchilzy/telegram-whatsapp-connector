@@ -42,7 +42,7 @@ class FilterController extends Controller
     public function store(Request $request)
     {
         request()->validate([
-            'match_case' => 'required',
+            'match_case' => 'required|unique:filters',
             'type' => 'required',
         ]);
         $input = $request->all();
@@ -94,8 +94,7 @@ class FilterController extends Controller
     public function update(Request $request, Filter $filter)
     {
         request()->validate([
-            'match_case' => 'required',
-            'exact_match' => 'required',
+            'match_case' => 'required|unique:filters,match_case,'.$filter->id,
             'type' => 'required',
         ]);
     

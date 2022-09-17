@@ -56,7 +56,7 @@ Echo.channel('telegramChannel').listen('TelegramEvent', (e) => {
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
-                                <NavLink :href="route('settings.index')" >
+                                <NavLink :href="route('settings')" >
                                     Settings
                                 </NavLink>
                                 <NavLink :href="route('filters.index')" >
