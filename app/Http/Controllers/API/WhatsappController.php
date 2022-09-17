@@ -18,4 +18,10 @@ class WhatsappController extends Controller
         event(new WhatsappEvent($qrCode));
         return response()->json(['status' => 'success'], 200);
     }
+
+    public function webhook(Request $request)
+    {
+        $type = $request->get('type');
+        
+    }
 }

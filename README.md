@@ -62,3 +62,11 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+# Installation
+- composer Install
+- npm install
+- php artisan migrate
+- set .env file values as follows
+    - BROADCAST_DRIVER=pusher
+    - TELESAPP_SERVER='http://xxxxxxx.com' (without tailing slash)

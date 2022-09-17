@@ -5,9 +5,35 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link, usePage } from '@inertiajs/inertia-vue3';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const showingNavigationDropdown = ref(false);
+const serverStats = ref({
+    whatsapp: 'not connected',
+    telegram: 'not connected'
+});
+async function checkStatuses(){
+    let whatsapp = await axios.get(usePage().props.value.telesapp + '/whatsapp/status');
+    let telegram = await axios.get(usePage().props.value.telesapp + '/telegram/status');
+    serverStats.value.whatsapp = whatsapp.data.status;
+    serverStats.value.telegram = telegram.data.status
+}
+checkStatuses();
+
+Echo.channel('telegramChannel').listen('TelegramEvent', (e) => {
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Telegram message',
+        text: e.data.text,
+        showConfirmButton: false,
+        timer: 6000
+    })
+});
+
 </script>
 
 <template>
@@ -102,8 +128,19 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Heading -->
             <header class="bg-white shadow" v-if="$slots.header">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between">
                     <slot name="header" />
+                    <div class="flex gap-10">
+                        <div class="flex gap-2 items-center" v-if="serverStats.whatsapp">
+                            <img class="w-6 h-6" src="../assets/whatsapp.svg" />
+                            <span class="uppercase text-sm px-2 text-white rounded-full" :class="(serverStats.whatsapp && serverStats.whatsapp !== 'CONNECTED') ? 'bg-red-500' : 'bg-green-500'" v-text="serverStats.whatsapp"></span>
+                        </div>
+                        <div class="flex gap-2 items-center" v-if="serverStats.telegram">
+                            <img class="w-6 h-6" src="../assets/telegram.svg" />
+                            <span class="uppercase text-sm px-2 text-white rounded-full" :class="(serverStats.telegram && serverStats.telegram == 'not connected') ? 'bg-red-500' : 'bg-green-500'" v-text="serverStats.telegram"></span>
+                        </div>
+                    </div>
+
                 </div>
             </header>
 

@@ -1,6 +1,14 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
+import Swal from 'sweetalert2'
+
+// Swal.fire({
+//   title: 'Error!',
+//   text: 'Do you want to continue',
+//   icon: 'error',
+//   confirmButtonText: 'Cool'
+// })
 </script>
 
 <template>

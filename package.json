@@ -29,6 +29,7 @@
         "pusher-js": "^7.4.0",
         "qrcode": "^1.5.1",
         "qrcode-reader-vue3": "^3.1.2",
+        "sweetalert2": "^11.4.33",
         "vue3-qr-code-styling": "^1.4.6",
         "whatsapp-web.js": "^1.17.1"
     }
