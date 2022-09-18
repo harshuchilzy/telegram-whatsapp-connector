@@ -34,7 +34,6 @@ function submit() {
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <form @submit.prevent="submit" class="px-8 pt-6 pb-8 mb-4">
-                            <div class="grid grid-cols-3 gap-4">
                                 <div class="mb-4">
                                     <label class="block text-gray-700 text-sm font-bold mb-2" for="match_case">
                                         Match case
@@ -50,6 +49,10 @@ function submit() {
                                     <div class="relative">
                                         <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="type" name="type" v-model="form.type">
                                             <option value="trade">Trade filter</option>
+                                            <option value="money-management">Trade management (percentage of the trade from balance)</option>
+                                            <option value="entry">Entry</option>
+                                            <option value="stop-loss">Stop Loss</option>
+                                            <option value="take-profit">Take Profit</option>
                                             <option value="currency">Currency pair</option>
                                         </select>
                                     </div>
@@ -65,7 +68,6 @@ function submit() {
                                         </span>
                                     </label>
                                 </div>
-                            </div>
 
 
 

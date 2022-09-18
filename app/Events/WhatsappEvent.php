@@ -14,15 +14,15 @@ class WhatsappEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $qr;
+    public $data;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($qr)
+    public function __construct($data)
     {
-        $this->qr = $qr;
+        $this->data = $data;
     }
 
     /**

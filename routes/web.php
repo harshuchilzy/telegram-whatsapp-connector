@@ -48,14 +48,19 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     Route::get('inbox', [\App\Http\Controllers\API\MessageController::class, 'inbox'])->name('inbox');
 
+    // Connect with Servers
+    Route::get('/servers', [\App\Http\Controllers\FrontendController::class, 'authenticateServers'])->name('servers.connect');
+
     // FIlters/Parsers
     Route::resource('filters', \App\Http\Controllers\FilterController::class);
     // Settings
     Route::get('settings', [\App\Http\Controllers\SettingsController::class, 'settings'])->name('settings');
     Route::post('settings', [\App\Http\Controllers\SettingsController::class, 'store'])->name('settings.store');
 
+    // Forward to Whatsapp
+    // Route::post('whatsapp-this', [\App\Http\Controllers\API\WhatsappController::class, 'sendWhatsapp'])->name('whatsapp.this');
     // Test Location
-    Route::get('test', [\App\Http\Controllers\API\MessageController::class, 'test']);
+    Route::get('test', [\App\Http\Controllers\API\TelegramController::class, 'test']);
 
 });
 

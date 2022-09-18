@@ -8,7 +8,10 @@ class SettingsController extends Controller
 {
     public function settings()
     {
-        return inertia()->render('Settings/Settings');
+        $settings = setting()->all();
+        return inertia()->render('Settings/Settings', [
+            'settings' => $settings
+        ]);
     }
     public function store(Request $request)
     {
@@ -20,6 +23,6 @@ class SettingsController extends Controller
             setting()->set($label, $setting);
             setting()->save();
         }
-        return redirect()->route('settings');
+        return redirect()->route('settings')->with('success', 'Settings updated!');
     }
 }

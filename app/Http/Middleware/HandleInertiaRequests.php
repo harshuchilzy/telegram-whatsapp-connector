@@ -45,7 +45,11 @@ class HandleInertiaRequests extends Middleware
             },
             'telesapp' => function(){
                 return env('TELESAPP_SERVER', 'http://localhost:3002');
-            }
+            },
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error')
+            ]
         ]);
     }
 }

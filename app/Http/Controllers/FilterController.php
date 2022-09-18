@@ -15,8 +15,11 @@ class FilterController extends Controller
     public function index()
     {
         $currencyFilters = Filter::where('type', 'currency')->paginate(15);
-        $tradingFilters = Filter::where('type', 'trade')->paginate(15);
-
+        $tradingFilters = Filter::where('type', 'trade')
+        ->orWhere('type', 'stop-loss')
+        ->orWhere('type', 'money-management')
+        ->orWhere('type', 'entry')
+        ->orWhere('type', 'take-profit')->paginate(15);
         return inertia()->render('Filters/Index', [
             'currencyFilters' => $currencyFilters,
             'tradingFilters' => $tradingFilters

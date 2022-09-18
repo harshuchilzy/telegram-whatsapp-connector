@@ -57,6 +57,10 @@ function submit() {
                                 <div class="relative">
                                     <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="type" name="type" v-model="form.type">
                                         <option value="trade">Trade filter</option>
+                                        <option value="money-management">Trade management (percentage of the trade from balance)</option>
+                                        <option value="entry">Entry</option>
+                                        <option value="stop-loss">Stop Loss</option>
+                                        <option value="take-profit">TP</option>
                                         <option value="currency">Currency pair</option>
                                     </select>
                                 </div>

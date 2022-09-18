@@ -18,9 +18,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('incoming-message', [\App\Http\Controllers\API\MessageController::class, 'incomingMessage'])->middleware('auth:sanctum')->name('api.incoming-telegram');
+// Route::post('incoming-message', [\App\Http\Controllers\API\MessageController::class, 'incomingMessage'])->middleware('auth:sanctum')->name('api.incoming-telegram');
 
-Route::post('whatsapp-qr', [\App\Http\Controllers\API\WhatsappController::class, 'receiveQR'])->middleware('auth:sanctum');
+// Route::post('whatsapp-qr', [\App\Http\Controllers\API\WhatsappController::class, 'receiveQR'])->middleware('auth:sanctum');
 
 Route::post('whatsapp-webhook', [\App\Http\Controllers\API\WhatsappController::class, 'webhook'])->middleware('auth:sanctum');
-Route::post('telegram-webhook', [\App\Http\Controllers\API\TelegramController::class, 'webhook'])->middleware('auth:sanctum');
+Route::post('telegram-webhook', [\App\Http\Controllers\API\TelegramController::class, 'webhook'])->middleware('auth:sanctum')->name('api.telegram.webhook');

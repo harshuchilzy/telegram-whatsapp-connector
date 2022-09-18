@@ -9,31 +9,37 @@ import { Link, usePage } from '@inertiajs/inertia-vue3';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
+const props = defineProps({
+    flash: Object
+})
+
 const showingNavigationDropdown = ref(false);
 const serverStats = ref({
     whatsapp: 'not connected',
     telegram: 'not connected'
 });
-async function checkStatuses(){
+async function checkStatuses() {
     let whatsapp = await axios.get(usePage().props.value.telesapp + '/whatsapp/status');
     let telegram = await axios.get(usePage().props.value.telesapp + '/telegram/status');
     serverStats.value.whatsapp = whatsapp.data.status;
-    serverStats.value.telegram = telegram.data.status
+    serverStats.value.telegram = telegram.data.status;
+    console.log(serverStats.value)
 }
 checkStatuses();
 
 Echo.channel('telegramChannel').listen('TelegramEvent', (e) => {
-    Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'success',
-        title: 'Telegram message',
-        text: e.data.text,
-        showConfirmButton: false,
-        timer: 6000
-    })
+    if (e.data.text !== undefined) {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: 'Telegram message',
+            text: e.data.text,
+            showConfirmButton: false,
+            timer: 6000
+        })
+    }
 });
-
 </script>
 
 <template>
@@ -47,7 +53,7 @@ Echo.channel('telegramChannel').listen('TelegramEvent', (e) => {
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                    <ApplicationLogo class="block h-9 w-auto" />
+                                <ApplicationLogo class="block h-9 w-auto" />
                                 </Link>
                             </div>
 
@@ -56,11 +62,14 @@ Echo.channel('telegramChannel').listen('TelegramEvent', (e) => {
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
-                                <NavLink :href="route('settings')" >
+                                <NavLink :href="route('settings')">
                                     Settings
                                 </NavLink>
-                                <NavLink :href="route('filters.index')" >
+                                <NavLink :href="route('filters.index')">
                                     Filters
+                                </NavLink>
+                                <NavLink :href="route('servers.connect')">
+                                    Servers
                                 </NavLink>
                             </div>
                         </div>
@@ -133,7 +142,8 @@ Echo.channel('telegramChannel').listen('TelegramEvent', (e) => {
                     <div class="flex gap-10">
                         <div class="flex gap-2 items-center" v-if="serverStats.whatsapp">
                             <img class="w-6 h-6" src="../assets/whatsapp.svg" />
-                            <span class="uppercase text-sm px-2 text-white rounded-full" :class="(serverStats.whatsapp && serverStats.whatsapp !== 'CONNECTED') ? 'bg-red-500' : 'bg-green-500'" v-text="serverStats.whatsapp"></span>
+                            <span class="uppercase text-sm px-2 text-white rounded-full" v-if="serverStats.whatsapp !== 'check-for-qr'" :class="(serverStats.whatsapp && serverStats.whatsapp !== 'CONNECTED') ? 'bg-red-500' : 'bg-green-500'" v-text="serverStats.whatsapp"></span>
+                            <a :href="route('servers.connect')" class="px-3 text-white bg-slate-600 hover:bg-slate-700 rounded-full" v-else>Click to connect</a>
                         </div>
                         <div class="flex gap-2 items-center" v-if="serverStats.telegram">
                             <img class="w-6 h-6" src="../assets/telegram.svg" />
