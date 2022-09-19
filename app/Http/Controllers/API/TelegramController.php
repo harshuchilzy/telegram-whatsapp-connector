@@ -20,7 +20,8 @@ class TelegramController extends Controller
         $this->headers = [
             'Content-Type' => 'application/json; charset=UTF-8',
             'Accept' => 'application/json; charset=UTF-8',
-            'X-IG-API-KEY' => '3699ffa0f7aceda59e386f92e2d9b465e9cedb2f',
+            // 'X-IG-API-KEY' => '3699ffa0f7aceda59e386f92e2d9b465e9cedb2f',
+            'X-IG-API-KEY' => setting('igApiKey'),
             'IG-ACCOUNT-ID' => 'Z4YNKA'
         ];
     }
@@ -108,7 +109,8 @@ class TelegramController extends Controller
             $headers = $this->headers;
             // $headers['VERSION'] = '3';
     
-            $response = Http::withHeaders($headers)->withToken($token)->post('https://demo-api.ig.com/gateway/deal/positions/otc', $body);
+            // $response = Http::withHeaders($headers)->withToken($token)->post('https://demo-api.ig.com/gateway/deal/positions/otc', $body);
+            $response = Http::withHeaders($headers)->withToken($token)->post(setting('igPathUrl'), $body);
             $body = $response->body();
             $body = json_decode($body);
             Log::info($response->body());
@@ -167,8 +169,10 @@ class TelegramController extends Controller
     public function getIGToken()
     {
         $body = [
-            "identifier" => "harshanalaravel",
-            "password" => "Elakiri123"
+            // "identifier" => "harshanalaravel",
+            "identifier" => setting('igUsername'),
+            "password" => setting('igPassword')
+            // "password" => "Elakiri123"
         ];
         $headers = $this->headers;
         $headers['VERSION'] = '3';

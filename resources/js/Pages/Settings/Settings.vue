@@ -129,11 +129,43 @@ function submitIG(){
                                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="igPassword" type="password" v-model="ig.igPassword" placeholder="Password">
                                 </div>
                             </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="form-group mb-4">
+                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="igAccType">
+                                        IG Account Type
+                                    </label>
+                                    <div class="relative">
+                                        <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="igAccType" v-model="form.igAccType">
+                                            <option value="CFD">CFD</option>
+                                            <option value="IP">IP</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="igCurrency">
+                                        IG Trade Currency
+                                    </label>
+                                    <div class="relative">
+                                        <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="igCurrency" v-model="form.igCurrency">
+                                            <option value="USD">USD</option>
+                                            <option value="EUR">EUR</option>
+                                            <option value="GBP">GBP</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="igPathUrl">
+                                    IG API Path URL
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="igPathUrl" type="text" v-model="ig.igPathUrl" placeholder="IG API Path URL">
+                            </div>
                             <div class="flex items-center justify-between">
                                 <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                                     Authenticate
                                 </button>
-                            </div>                        </form>
+                            </div>                        
+                        </form>
                     </div>
                 </div>
             </div>
