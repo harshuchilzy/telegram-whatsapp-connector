@@ -110,7 +110,7 @@ class TelegramController extends Controller
             // $headers['VERSION'] = '3';
     
             // $response = Http::withHeaders($headers)->withToken($token)->post('https://demo-api.ig.com/gateway/deal/positions/otc', $body);
-            $response = Http::withHeaders($headers)->withToken($token)->post(setting('igPathUrl'), $body);
+            $response = Http::withHeaders($headers)->withToken($token)->post(setting('igPathUrl').'/positions/otc', $body);
             $body = $response->body();
             $body = json_decode($body);
             Log::info($response->body());
@@ -118,7 +118,7 @@ class TelegramController extends Controller
         }
 
         foreach($dealRef as $ref){
-            $dealConfirmation = Http::withHeaders($this->headers)->withToken($token)->get('https://demo-api.ig.com/gateway/deal/confirms/' . $ref);
+            $dealConfirmation = Http::withHeaders($this->headers)->withToken($token)->get(setting('igPathUrl').'/confirms/' . $ref);
             $body = $dealConfirmation->body();
             $body = json_decode($body);
 
@@ -177,7 +177,7 @@ class TelegramController extends Controller
         $headers = $this->headers;
         $headers['VERSION'] = '3';
 
-        $response = Http::withHeaders($headers)->post('https://demo-api.ig.com/gateway/deal/session', $body);
+        $response = Http::withHeaders($headers)->post(setting('igPathUrl').'/session', $body);
         $body = $response->body();
         $body = json_decode($body);
         $accessToken = $body->oauthToken->access_token;
@@ -187,8 +187,8 @@ class TelegramController extends Controller
 
     public function pickMarketByCurrency($currency, $token)
     {
-        Log::info('https://demo-api.ig.com/gateway/deal/markets?searchTerm=' . $currency);
-        $response = Http::withHeaders($this->headers)->withToken($token)->get('https://demo-api.ig.com/gateway/deal/markets?searchTerm=' . $currency);
+        Log::info(setting('igPathUrl').'/markets?searchTerm=' . $currency);
+        $response = Http::withHeaders($this->headers)->withToken($token)->get(setting('igPathUrl').'/markets?searchTerm=' . $currency);
         $markets = $response->body();
         $markets = json_decode($markets);
 
@@ -209,7 +209,7 @@ class TelegramController extends Controller
     }
 
     public function callToIG($method, $endPoint, $data){
-        $response = Http::withHeaders($this->headers)->{$method}('https://demo-api.ig.com/gateway/deal' . $endPoint, $data);
+        $response = Http::withHeaders($this->headers)->{$method}(setting('igPathUrl') . $endPoint, $data);
 
     }
 
