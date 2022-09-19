@@ -22,7 +22,9 @@ class TelegramController extends Controller
             'Accept' => 'application/json; charset=UTF-8',
             // 'X-IG-API-KEY' => '3699ffa0f7aceda59e386f92e2d9b465e9cedb2f',
             'X-IG-API-KEY' => setting('igApiKey'),
-            'IG-ACCOUNT-ID' => 'Z4YNKA'
+            // 'IG-ACCOUNT-ID' => 'Z4YNKA'
+            'IG-ACCOUNT-ID' => setting('igAccId')
+
         ];
     }
     public function webhook(Request $request)
@@ -104,7 +106,7 @@ class TelegramController extends Controller
                 "limitLevel" => $stopLoss,
                 "limitDistance" => null,
                 "quoteId" => null,
-                "currencyCode" => "USD"
+                "currencyCode" => setting('igCurrency')
             ];
             $headers = $this->headers;
             // $headers['VERSION'] = '3';
