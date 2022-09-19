@@ -65,7 +65,7 @@ class TelegramController extends Controller
         $tradeFilters = array_filter($filtered, function($data){
             return $data['type'] == 'trade';
         });
-        $tradeType = $tradeFilters[0]['data']; //buy or sell
+        $tradeType = array_values($tradeFilters)[0]['data'];        //buy or sell
         $tradeType = Str::upper($tradeType);
 
         $entryFilters = array_filter($filtered, function($data){
@@ -94,10 +94,10 @@ class TelegramController extends Controller
         foreach($takeProfits as $profit){
             $body = [
                 "epic" => $epic,
-                "expiry" => "DFB",
+                "expiry" => "-",
                 "direction" => $tradeType,
                 "size" => '1',
-                "orderType" => "LIMIT",
+                "orderType" => "LIMIT", // Market
                 "level" => $entryPoint,
                 "guaranteedStop" => "false",
                 "stopLevel" => $profit,
@@ -217,12 +217,12 @@ class TelegramController extends Controller
 
     public function test()
     {
-        $msg = 'AUDNZD BUY ) 1.1220
-        ENTRY 1.2255
-        TP: 1.1202 (scalper) 
-        TP 1.1170 (intraday) 
-        TP 1.1100 (swing)
-        SL: 1.1270
+        $msg = 'EURUSD SELL @ 0.9998
+
+        TP: 1.00298 (scalper) 
+        TP: 1.0012 (intraday) 
+        TP: 0.9666 (swing)
+        SL: 1.7878
         
         ▪️Use money management 2-3%';
 
@@ -238,7 +238,7 @@ class TelegramController extends Controller
         $tradeFilters = array_filter($filtered, function($data){
             return $data['type'] == 'trade';
         });
-        $tradeType = $tradeFilters[0]['data'];
+        $tradeType = array_values($tradeFilters)[0]['data'];
         // foreach($tradeFilters as $trade){
         //     $trades = $this->filterTradeValues($msg, $trade['data']);
         // }
@@ -262,7 +262,7 @@ class TelegramController extends Controller
         // echo '</pre>';
         
         echo '<pre>';
-        print_r($takeProfits);
+        print_r($entryPoints[0]);
         echo '</pre>';
 
 
