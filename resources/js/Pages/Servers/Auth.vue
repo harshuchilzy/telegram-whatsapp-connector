@@ -101,7 +101,7 @@ Echo.channel('telegramChannel').listen('TelegramEvent', (e) => {
 
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white bg-[url('../whatsapp-bg.jpeg')] bg-contain bg-repeat h-full border-b border-gray-200">
-                        <div v-if="serverStats.whatsapp === 'not connected'" class="grid grid-cols-2 gap-6 items-center h-full">
+                        <div v-if="serverStats.whatsapp !== 'CONNECTED'" class="grid grid-cols-2 gap-6 items-center h-full">
                             <div v-if="qrCode == 'empty'">
                                 <div class="flex justify-center items-center">
                                     <div class="spinner-border animate-spin inline-block w-16 h-16 border-4 rounded-full" role="status">

@@ -42,7 +42,7 @@ class TelegramController extends Controller
             return response('success', 200);
         }elseif($type == 'qr'){
             $code = $request->get('qr');
-            Log::info('QR' . $code);
+            Log::info('Telegram QR' . $code);
             event(new TelegramEvent(['qr' => $code]));
             return response('recieved', 200);
         }
