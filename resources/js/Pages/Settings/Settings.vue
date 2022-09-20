@@ -4,6 +4,7 @@ import { Head, useForm, usePage } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
 import Swal from 'sweetalert2';
 
+
 const props = defineProps({
     token: Object,
     settings: Object
@@ -34,13 +35,19 @@ const ig = useForm({
     igCurrency: props.settings.igCurrency,
     igPathUrl: props.settings.igPathUrl,
     igUsername: props.settings.igUsername,
-    igPassword: ''
+    igPassword: '',
 });
 function submitIG(){
     Inertia.post(route('settings.store'), ig);
+    Swal.fire(
+        'Good job!',
+        'You clicked the button!',
+        'success'
+    )
 }
+
 </script>
-    
+
 <template>
 
     <Head title="Dashboard" />
@@ -173,7 +180,7 @@ function submitIG(){
                                 <p class="text-sm mt-1">Path should enter WITHOUT tailing slash /</p>
                             </div>
                             <div class="flex items-center justify-between">
-                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                                <button  v-on:click="showAlert" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                                     Authenticate
                                 </button>
                             </div>                        
@@ -197,7 +204,6 @@ function submitIG(){
                                 </div>
 
                             </div>
-                            {{props.token}}
                             <div class="flex items-center justify-between">
                                 <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                                     Get Token
@@ -210,4 +216,4 @@ function submitIG(){
         </div>
     </AuthenticatedLayout>
 </template>
-    
+
