@@ -91,9 +91,22 @@ class TelegramController extends Controller
             $takeProfits = $this->filterTradeValues($message, $tp['data']);
         }
 
+        if($tradeType == 'SELL' AND (floatval($epic['bid']) < floatval($entryPoint) AND floatval($entryPoint > $profit)) ){
+            
+        }
+
+        if($tradeType == 'SELL' AND (floatval($epic['bid']) < floatval($entryPoint) AND floatval($entryPoint) > floatval($takeProfits[0])) ){
+            $apiPath = '/positions/otc';
+        }elseif($tradeType == 'SELL' AND (floatval($epic['bid']) > floatval($entryPoint))){
+            $apiPath = '/workingorders/otc';
+        }else{
+            (new WhatsappController)->sendWhatsapp('MISSED TRADE');
+        }
+
         foreach($takeProfits as $profit){
+            
             $body = [
-                "epic" => $epic,
+                "epic" => $epic['epic'],
                 "expiry" => "-",
                 "direction" => $tradeType,
                 "size" => '1',
@@ -108,8 +121,10 @@ class TelegramController extends Controller
                 "quoteId" => null,
                 "currencyCode" => setting('igCurrency')
             ];
+
+            
+
             $headers = $this->headers;
-            // $headers['VERSION'] = '3';
     
             // $response = Http::withHeaders($headers)->withToken($token)->post('https://demo-api.ig.com/gateway/deal/positions/otc', $body);
             $response = Http::withHeaders($headers)->withToken($token)->post(setting('igPathUrl').'/positions/otc', $body);
@@ -198,7 +213,12 @@ class TelegramController extends Controller
             foreach($market as $data){
                 $epic = $data->epic;
                 if(str_contains($epic, 'CFD')){
-                    $epics[] = $epic;
+                    $epics[] = array(
+                        'epic' => $epic,
+                        'bid' => $data->bid, //current value for sell
+                        'offer' => $data->offer, //current value for buy
+                        'market_status' => $data->marketStatus
+                    );
                 }
             }
         }
