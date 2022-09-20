@@ -16,14 +16,14 @@ onUpdated(() => {
     if (props.flash.success) {
         Swal.fire({
             icon: 'success',
-            title: 'Your work has been saved',
+            title: props.flash.success,
             showConfirmButton: false,
             timer: 1500
             })
     }else if(props.flash.error){
         Swal.fire(
             'Fail!',
-            'Your data didnt save!',
+            props.flash.error,
             'error'
         )
     }
