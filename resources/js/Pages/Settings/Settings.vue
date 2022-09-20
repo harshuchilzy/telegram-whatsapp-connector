@@ -3,11 +3,30 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, usePage } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
 import Swal from 'sweetalert2';
+import { ref, onUpdated } from 'vue';
 
 
 const props = defineProps({
     token: Object,
-    settings: Object
+    settings: Object,
+    flash: Object,
+    
+})
+onUpdated(() => {
+    if (props.flash.success) {
+        Swal.fire({
+            icon: 'success',
+            title: props.flash.success,
+            showConfirmButton: false,
+            timer: 1500
+            })
+    }else if(props.flash.error){
+        Swal.fire(
+            'Fail!',
+            props.flash.error,
+            'error'
+        )
+    }
 })
 
 const form = useForm({
@@ -39,11 +58,6 @@ const ig = useForm({
 });
 function submitIG(){
     Inertia.post(route('settings.store'), ig);
-    Swal.fire(
-        'Good job!',
-        'You clicked the button!',
-        'success'
-    )
 }
 
 </script>
@@ -58,7 +72,6 @@ function submitIG(){
                 Settings
             </h2>
         </template>
-
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -213,7 +226,41 @@ function submitIG(){
                     </div>
                 </div>
             </div>
+            <pre> 
+                        {{output}}
+                        </pre> 
         </div>
     </AuthenticatedLayout>
 </template>
 
+<script> 
+    export default {
+        mounted() {
+            console.log('Component mounted.')
+        },
+        data() {
+            return {
+              title: 'success',
+              description: 'Settings updated!',
+              output: ''
+            };
+        },
+        methods: {
+            formStore(e) {
+                e.preventDefault();
+                let currentObj = this;
+                axios.post('/store', {
+                    title: this.title,
+                    description: this.description
+                })
+                .then(function (response) {
+                    currentObj.output = response.data;
+                    flash('Post Created Successfully', 'success');
+                })
+                .catch(function (error) {
+                    currentObj.output = error;
+                });
+            }
+        }
+    }
+</script> 

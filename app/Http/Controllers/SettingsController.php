@@ -24,5 +24,6 @@ class SettingsController extends Controller
             setting()->save();
         }
         return redirect()->route('settings')->with('success', 'Settings updated!');
+        // return response()->json('success', 'Settings updated!');
     }
 }
