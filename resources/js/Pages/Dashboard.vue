@@ -32,7 +32,7 @@ const props = defineProps({
                 <div class="overflow-hidden grid grid-cols-3 gap-4">
                     <div v-for="account in accounts.accounts" :key="account.accountId">
                             <div class="bg-white p-5 m-5 shadow-lg sm:rounded-lg">
-                               <p class="text-right"> <small class="bg-emerald-400 p-1 text-white">{{ account.status }}</small></p>
+                               <p class="text-right bg-emerald-400"><small class="p-1">Market Status <b class="text-white">{{ account.status }}</b></small></p>
 
                                     <div class="grid grid-cols-2 gap-4 my-2">
                                         <h1><p class="underline"> <small>AccountId</small> </p><b>{{ account.accountId }}</b></h1>
@@ -58,8 +58,11 @@ const props = defineProps({
                        
                 </div>
             </div>
-            <div class="max-w-5xl mx-auto sm:px-6 lg:px-6 mb-5">
-                <div class="overflow-hidden grid grid-cols-3 gap-4">
+         
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-3">
+                    <div class="p-6 bg-white border-b border-gray-200">
+                        Current Trades
                     <table class="table w-full text-sm text-left text-gray-500 dark:text-gray-400" id="datatable_1">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-slate-700 dark:text-white">
                             <tr>
@@ -90,40 +93,34 @@ const props = defineProps({
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="order in orders.workingOrders" :key="order.id" class="hover:text-white bg-white border-b border-gray-100   hover:bg-gray-50 dark:hover:bg-slate-700/50">
+                            <tr v-for="order in orders.workingOrders" :key="order.id" class="dark:hover:text-white bg-white border-b border-gray-100   hover:bg-gray-50 dark:hover:bg-slate-700/50">
                                 <th scope="row" class="px-6 py-4 font-medium text-black dark:text-dark whitespace-nowrap">
-                                    {{ order.marketData.instrumentName }}
+                                    {{ order.workingOrderData.currencyCode }}
                                 </th>
                                 <td class="px-6 py-4">
-                                    {{ order.marketData.instrumentType }}
+                                    {{ order.workingOrderData.size }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ order.marketData.offer }}
+                                    {{ order.workingOrderData.level }}
                                 </td>  
                                 <td class="px-6 py-4">
-                                    {{ order.marketData.netChange }}
+                                    {{ order.marketData.offer }}
                                 </td>   
                                 <td class="px-6 py-4">
-                                    {{ order.marketData.scalingFactor }}
+                                    {{ order.workingOrderData.contingentStop }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ order.marketData.percentageChange }}
+                                    {{ order.workingOrderData.contingentStop }}
                                 </td> 
                                 <td class="px-6 py-4">
-                                    {{ order.marketData.instrumentType }}
+                                    {{ order.workingOrderData.contingentStop }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ order.marketData.marketStatus }}
+                                    {{ order.workingOrderData.contingentStop }}
                                 </td>   
                             </tr>
                         </tbody>
                     </table> 
-                </div>
-            </div>
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-2 gap-4">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 bg-white border-b border-gray-200">
-                        Current Trades
                     </div>
                 </div>
 
