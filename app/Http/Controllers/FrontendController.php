@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Message;
 use Illuminate\Support\Facades\Http;
 
 use Illuminate\Http\Request;
@@ -73,6 +74,9 @@ class FrontendController extends Controller
         ]);
     }
     public function messages(){
-        echo "dayz";
+        $messages = Message::all();
+        return inertia()->render('Messages/Index', [
+            'messages' => $messages,
+        ]);
     }
 }
