@@ -29,9 +29,10 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function(){
     
-    Route::get('/', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    // Route::get('/', function () {
+    //     return Inertia::render('Dashboard');
+    // })->name('dashboard');
+    Route::get('/', [\App\Http\Controllers\FrontendController::class, 'userDetails'])->name('dashboard');
 
     Route::get('profile', [\App\Http\Controllers\UserController::class, 'profile'])->name('user.profile');
 
@@ -50,6 +51,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     // Connect with Servers
     Route::get('/servers', [\App\Http\Controllers\FrontendController::class, 'authenticateServers'])->name('servers.connect');
+    Route::get('/details_servers', [\App\Http\Controllers\FrontendController::class, 'userDetails'])->name('servers.details');
+
 
     // FIlters/Parsers
     Route::resource('filters', \App\Http\Controllers\FilterController::class);
