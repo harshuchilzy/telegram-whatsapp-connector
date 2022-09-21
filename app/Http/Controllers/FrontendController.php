@@ -62,12 +62,17 @@ class FrontendController extends Controller
         $accessToken = $body->oauthToken->access_token;
         $accounts = Http::withHeaders($acoount_headers)->withToken($accessToken)->get(setting('igPathUrl').'/accounts');
         $orders = Http::withHeaders($acoount_headers)->withToken($accessToken)->get(setting('igPathUrl').'/workingorders');
+        $positions = Http::withHeaders($acoount_headers)->withToken($accessToken)->get(setting('igPathUrl').'/positions');
         // Log::info('Token ' . $accessToken);
         // print_r($orders->body());
         // return;
         return inertia()->render('Dashboard', [
             'accounts' => json_decode($accounts->body()),
-            'orders' => json_decode($orders->body())
+            'orders' => json_decode($orders->body()),
+            'positions' => json_decode($positions->body()),
         ]);
+    }
+    public function messages(){
+        echo "dayz";
     }
 }

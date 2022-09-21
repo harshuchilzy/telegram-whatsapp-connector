@@ -13,6 +13,7 @@ import Swal from 'sweetalert2'
 const props = defineProps({
     accounts: Object,
     orders: Object,
+    positions: Object
     })
 
 </script>
@@ -62,7 +63,7 @@ const props = defineProps({
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-3">
                     <div class="p-6 bg-white border-b border-gray-200">
-                        <h1 class="mb-1">Current Working Orders</h1>
+                        <h1 class="mb-4">Current Working Orders</h1>
                     <table class="table w-full text-sm text-left text-gray-500 dark:text-gray-400" id="datatable_1">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-slate-700 dark:text-white">
                             <tr>
@@ -132,7 +133,59 @@ const props = defineProps({
 
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
-                        Hello there
+                        <h1 class="mb-4">Current Positions</h1>
+                    <table class="table w-full text-sm text-left text-gray-500 dark:text-gray-400" id="datatable_1">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-slate-700 dark:text-white">
+                            <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            MARKET
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            DERECTION
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            SIZE
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            OPENING
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            LAST
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            STOP
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            LIMIT
+                                        </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="position in positions.positions" :key="position.id" class="dark:hover:text-white bg-white border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-slate-700/50">
+                                <th scope="row" class="px-6 py-4 font-medium text-black dark:text-dark whitespace-nowrap">
+                                    {{ position.market.instrumentName }}
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{ position.position.direction }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ position.position.dealSize }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ position.position.openLevel }}
+                                </td>  
+                                <td class="px-6 py-4">
+                                    {{ position.market.offer }}
+                                </td>   
+                                <td class="px-6 py-4">
+                                    {{ position.position.stopLevel }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ position.position.limitLevel }}
+                                </td> 
+                            </tr>
+                        </tbody>
+                    </table> 
                     </div>
                 </div>
             </div>

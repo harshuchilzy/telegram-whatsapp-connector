@@ -34,6 +34,9 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     // })->name('dashboard');
     Route::get('/', [\App\Http\Controllers\FrontendController::class, 'userDetails'])->name('dashboard');
 
+    Route::get('/messages', [\App\Http\Controllers\FrontendController::class, 'messages'])->name('messages');
+
+
     Route::get('profile', [\App\Http\Controllers\UserController::class, 'profile'])->name('user.profile');
 
     Route::post('/tokens/create', function (Request $request) {
