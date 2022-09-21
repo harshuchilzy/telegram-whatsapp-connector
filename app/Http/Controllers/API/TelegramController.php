@@ -133,6 +133,7 @@ class TelegramController extends Controller
             $body['orderType'] = 'LIMIT';
         }elseif($tradeType == 'BUY' AND (floatval($epic['offer'] > floatval($entryPoint)))){
             $apiPath = '/workingorders/otc';
+            $body['orderType'] = 'LIMIT';
         }
         else{
             (new WhatsappController)->sendWhatsapp('MISSED TRADE');
@@ -145,11 +146,13 @@ class TelegramController extends Controller
         $headers = $this->headers;
         $sendTrades = 0;
         foreach($takeProfits as $profit){
+            
             if($sendTrades >= 1){
                 $body['limitLevel'] = $takeProfits[0];
             }else{
                 $body['limitLevel'] = $profit;
             }
+
             Log::info($epic['bid']);
             Log::info($body);
             Log::info(setting('igPathUrl') . $apiPath);
