@@ -61,12 +61,13 @@ class FrontendController extends Controller
         $body = json_decode($body);
         $accessToken = $body->oauthToken->access_token;
         $accounts = Http::withHeaders($acoount_headers)->withToken($accessToken)->get(setting('igPathUrl').'/accounts');
-       
+        $orders = Http::withHeaders($acoount_headers)->withToken($accessToken)->get(setting('igPathUrl').'/workingorders');
         // Log::info('Token ' . $accessToken);
-        // print_r($accounts->body());
+        // print_r($orders->body());
         // return;
         return inertia()->render('Dashboard', [
-            'accounts' => json_decode($accounts->body())
+            'accounts' => json_decode($accounts->body()),
+            'orders' => json_decode($orders->body())
         ]);
     }
 }
