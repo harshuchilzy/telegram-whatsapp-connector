@@ -89,58 +89,92 @@ class TelegramController extends Controller
         });
         foreach($profitFilters as $tp){
             $takeProfits = $this->filterTradeValues($message, $tp['data']);
+            // Log::info($takeProfits[0]);
+            // return;
         }
 
-        if($tradeType == 'SELL' AND (floatval($epic['bid']) < floatval($entryPoint) AND floatval($entryPoint > $profit)) ){
+        // if($tradeType == 'SELL' AND (floatval($epic['bid']) < floatval($entryPoint) AND floatval($entryPoint > $profit)) ){
             
-        }
+        // }
 
-        if($tradeType == 'SELL' AND (floatval($epic['bid']) < floatval($entryPoint) AND floatval($entryPoint) > floatval($takeProfits[0])) ){
+        $body = [
+            "epic" => $epic['epic'],
+            "expiry" => "-",
+            "direction" => $tradeType,
+            "size" => '1',
+            // "orderType" => "LIMIT", // Market
+            "level" => $entryPoint,
+            "guaranteedStop" => "false",
+            "stopLevel" => $stopLoss, //stop loss
+            "stopDistance" => null,
+            "forceOpen" => "false",
+            // "limitLevel" => $takeprofit, //take profit
+            "limitDistance" => null,
+            "quoteId" => null,
+            "currencyCode" => setting('igCurrency')
+        ];
+
+        // Sell
+        if($tradeType == 'SELL' AND (floatval($epic['bid']) < floatval($entryPoint) AND floatval($entryPoint) > floatval($takeProfits[0])) ){ //QUESTION THIS
             $apiPath = '/positions/otc';
+            $body['orderType'] = 'LIMIT';
+            unset($body['quoteId']);
+
         }elseif($tradeType == 'SELL' AND (floatval($epic['bid']) > floatval($entryPoint))){
+            $body['type'] = 'STOP';
+            $body['timeInForce'] = "GOOD_TILL_CANCELLED";
             $apiPath = '/workingorders/otc';
-        }else{
+            unset($body['quoteId']);
+            unset($body['forceOpen']);
+        }
+        // Buy
+        elseif($tradeType == 'BUY' AND (floatval($epic['offer'] > floatval($entryPoint) and floatval($entryPoint) < $takeProfits[0]))){
+            $apiPath = '/positions/otc';
+            $body['orderType'] = 'LIMIT';
+        }elseif($tradeType == 'BUY' AND (floatval($epic['offer'] > floatval($entryPoint)))){
+            $apiPath = '/workingorders/otc';
+        }
+        else{
             (new WhatsappController)->sendWhatsapp('MISSED TRADE');
+            return;
         }
 
+        $headers = $this->headers;
+
+        $takeProfits[] = $takeProfits[0];
+        $headers = $this->headers;
+        $sendTrades = 0;
         foreach($takeProfits as $profit){
-            
-            $body = [
-                "epic" => $epic['epic'],
-                "expiry" => "-",
-                "direction" => $tradeType,
-                "size" => '1',
-                "orderType" => "LIMIT", // Market
-                "level" => $entryPoint,
-                "guaranteedStop" => "false",
-                "stopLevel" => $profit,
-                "stopDistance" => null,
-                "forceOpen" => "false",
-                "limitLevel" => $stopLoss,
-                "limitDistance" => null,
-                "quoteId" => null,
-                "currencyCode" => setting('igCurrency')
-            ];
+            if($sendTrades >= 1){
+                $body['limitLevel'] = $takeProfits[0];
+            }else{
+                $body['limitLevel'] = $profit;
+            }
+            Log::info($epic['bid']);
+            Log::info($body);
+            Log::info(setting('igPathUrl') . $apiPath);
 
-            
-
-            $headers = $this->headers;
-    
-            // $response = Http::withHeaders($headers)->withToken($token)->post('https://demo-api.ig.com/gateway/deal/positions/otc', $body);
-            $response = Http::withHeaders($headers)->withToken($token)->post(setting('igPathUrl').'/positions/otc', $body);
-            $body = $response->body();
-            $body = json_decode($body);
+            $response = Http::withHeaders($headers)->withToken($token)->post(setting('igPathUrl').$apiPath, $body);
+            $tradeBody = $response->body();
+            $tradeBody = json_decode($tradeBody);
             Log::info($response->body());
-            $dealRef[] = $body->dealReference;
+            if(!empty($tradeBody->errorCode)){
+                (new WhatsappController)->sendWhatsapp('ERROR IN TRADE ' . $tradeBody->errorCode);
+            }else{
+                $dealRef[] = $tradeBody->dealReference;
+            }
+            $sendTrades++;
         }
 
-        foreach($dealRef as $ref){
-            $dealConfirmation = Http::withHeaders($this->headers)->withToken($token)->get(setting('igPathUrl').'/confirms/' . $ref);
-            $body = $dealConfirmation->body();
-            $body = json_decode($body);
+        if(!empty($dealRef)){
+            foreach($dealRef as $ref){
+                $dealConfirmation = Http::withHeaders($this->headers)->withToken($token)->get(setting('igPathUrl').'/confirms/' . $ref);
+                $body = $dealConfirmation->body();
+                $body = json_decode($body);
 
-            //Send Whatsapp Message
-            (new WhatsappController)->sendWhatsapp('Deal Status: ' .$body->dealStatus . ', Reason: ' . $body->reason);
+                //Send Whatsapp Message
+                (new WhatsappController)->sendWhatsapp('Deal Status: ' .$body->dealStatus . ', Reason: ' . $body->reason);
+            }
         }
     }
     
@@ -237,13 +271,13 @@ class TelegramController extends Controller
 
     public function test()
     {
-        $msg = 'EURUSD SELL @ 0.9998
+        $msg = 'EURUSD SELL @ 0.9960
 
-        TP: 1.00298 (scalper) 
-        TP: 1.0012 (intraday) 
-        TP: 0.9666 (swing)
-        SL: 1.7878
-        
+        TP: 0.9956 (scalper)
+        TP: 0.9953 (intraday)
+        TP: 0.9955 (swing)
+        SL: 0.9978
+
         ▪️Use money management 2-3%';
 
         $filtered = $this->filter_data($msg);
@@ -277,14 +311,12 @@ class TelegramController extends Controller
             $takeProfits = $this->filterTradeValues($msg, $tp['data']);
         }
             
-        // echo '<pre>';
-        // print_r($entryFilters);
-        // echo '</pre>';
-        
         echo '<pre>';
-        print_r($entryPoints[0]);
+        print_r($takeProfits);
         echo '</pre>';
-
-
+        
+        // echo '<pre>';
+        // print_r($entryPoints[0]);
+        // echo '</pre>';
     }
 }
