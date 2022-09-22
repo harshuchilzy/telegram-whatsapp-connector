@@ -167,7 +167,12 @@ class TelegramController extends Controller
                 $body = json_decode($body);
                 $this->saveToAction($messageCollection, 'igAPI', $dealConfirmation->body(), $body->dealStatus, $messageCollection);
                 //Send Whatsapp Message
-                (new WhatsappController)->sendWhatsapp('Deal Status: ' .$body->dealStatus . ', Reason: ' . $body->reason, $messageCollection);
+                $message = Message::get()->first();
+                $create_time = $message->created_at->format('H:i:s');
+                $update_time = $message->updated_at->format('H:i:s');
+                $duration =  intval($update_time) - intval($create_time);
+                $tot_seconds =  $duration / 3600;
+                (new WhatsappController)->sendWhatsapp('Deal Status: ' .$body->dealStatus . ', Reason: ' . $body->reason, $messageCollection . 'Trade created'.$tot_seconds);
                 $messageCollection->action = $body->dealStatus;
                 $messageCollection->save();
             }
@@ -315,6 +320,15 @@ class TelegramController extends Controller
         // echo '<pre>';
         // print_r($entryPoints[0]);
         // echo '</pre>';
-        echo "dayz";
+
+        $message = Message::get()->first();
+        $create_time = $message->created_at->format('H:i:s');
+        $update_time = $message->updated_at->format('H:i:s');
+        $duration =  intval($update_time) - intval($create_time);
+
+        // $create_time = $message->created_at;
+        // $update_time = $message->updated_at;
+        // $duration =  strtotime($update_time) - strtotime($create_time);
+        dd ($duration/3600);
     }
 }
