@@ -45,7 +45,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="action in actions" :key="action.id" class="bg-white border-b border-gray-100 text-black">
+                                        <tr v-for="action in actions.data" :key="action.id" class="bg-white border-b border-gray-100 text-black">
                                             <th scope="row" class="px-6 py-4 font-medium text-black dark:text-dark whitespace-nowrap">
                                                 {{ action.model }}
                                             </th>
@@ -64,7 +64,7 @@
                                         </tr>
                                     </tbody>
                                 </table> 
-                            
+                                <Pagination class="my-2" :links="actions.links"/>
                             </div>
                             
                         </div>
