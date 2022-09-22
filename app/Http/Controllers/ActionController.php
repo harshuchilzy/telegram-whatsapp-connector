@@ -14,7 +14,10 @@ class ActionController extends Controller
      */
     public function index()
     {
-        //
+        $actions = Action::all();
+        return inertia()->render('Action/Index', [
+            'actions' => $actions
+        ]);
     }
 
     /**

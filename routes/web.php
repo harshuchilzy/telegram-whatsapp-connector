@@ -67,6 +67,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     // Test Location
     Route::get('test', [\App\Http\Controllers\API\TelegramController::class, 'test']);
 
+    Route::resource('action', \App\Http\Controllers\ActionController::class);
+
 });
 
 

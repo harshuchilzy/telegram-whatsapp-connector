@@ -89,7 +89,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="filter in currencyFilters.data" :key="filter.id" class="bg-white border-b border-gray-100  hover:text-white  hover:bg-dark dark:hover:bg-slate-700/50">
+                                    <tr v-for="filter in currencyFilters.data" :key="filter.id" class="bg-white border-b border-gray-100  dark:hover:text-white  hover:bg-gray-50 dark:hover:bg-slate-700/50">
                                         <th scope="row" class="px-6 py-4 font-medium text-black dark:text-dark whitespace-nowrap">
                                             {{ filter.match_case }}
                                         </th>

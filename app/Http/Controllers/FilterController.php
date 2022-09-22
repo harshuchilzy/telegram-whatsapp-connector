@@ -83,15 +83,29 @@ class FilterController extends Controller
      */
     public function edit(Filter $filter)
     {
-        return inertia()->render('Filters/Edit', [
-            'filter' => [
-                'id' => $filter->id,
-                'match_case' => $filter->match_case,
-                'exact_match' => $filter->exact_match,
-                'type' => $filter->type
-            ]
-        ]);
+        if ($filter->type == 'currency') {
+            return inertia()->render('Filters/EditCurrency', [
+                'filter' => [
+                    'id' => $filter->id,
+                    'match_case' => $filter->match_case,
+                    'exact_match' => $filter->exact_match,
+                    'type' => $filter->type
+                ]
+            ]);
+        } else {
+            return inertia()->render('Filters/EditTrading', [
+                'filter' => [
+                    'id' => $filter->id,
+                    'match_case' => $filter->match_case,
+                    'exact_match' => $filter->exact_match,
+                    'type' => $filter->type
+                ]
+            ]);
+        }
+        
+       
     }
+   
 
     /**
      * Update the specified resource in storage.

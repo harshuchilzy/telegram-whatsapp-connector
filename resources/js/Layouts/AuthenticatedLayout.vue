@@ -74,6 +74,9 @@ Echo.channel('telegramChannel').listen('TelegramEvent', (e) => {
                                 <NavLink :href="route('servers.connect')">
                                     Servers
                                 </NavLink>
+                                <NavLink :href="route('action.index')">
+                                    Log
+                                </NavLink>
                             </div>
                         </div>
 

@@ -30,7 +30,7 @@
                             <div class="p-6 bg-white border-b border-gray-200 col-span-5"> 
                                 <h1 class="mb-4">Accepted</h1>        
                                 <table class="table w-full text-sm text-left text-gray-500 dark:text-gray-400" id="datatable_1">
-                                    <thead class="text-xs text-white uppercase bg-gray-50 dark:bg-slate-700 dark:text-white">
+                                    <thead class="text-xs text-black uppercase bg-gray-50 dark:bg-slate-700 dark:text-white">
                                         <tr>
                                             <th scope="col" class="px-6 py-3">
                                                 Derections
@@ -70,7 +70,7 @@
                             <div class="p-6 bg-white border-b border-gray-200 col-span-5">
                                 <h1 class="mb-4">Rejected</h1>      
                                 <table class="table w-full text-sm text-left text-gray-500 dark:text-gray-400" id="datatable_1">
-                                    <thead class="text-xs text-white uppercase bg-gray-50 dark:bg-slate-700 dark:text-white">
+                                    <thead class="text-xs text-black uppercase bg-gray-50 dark:bg-slate-700 dark:text-white">
                                         <tr>
                                             <th scope="col" class="px-6 py-3">
                                                 Derections
