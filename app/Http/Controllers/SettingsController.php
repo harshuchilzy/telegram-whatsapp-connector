@@ -6,15 +6,14 @@ use Illuminate\Http\Request;
 
 class SettingsController extends Controller
 {
-    public function settings()
-    {
+    public function settings(){
         $settings = setting()->all();
         return inertia()->render('Settings/Settings', [
             'settings' => $settings
         ]);
     }
-    public function store(Request $request)
-    {
+
+    public function store(Request $request){
         $inputs = $request->all();
         unset( $inputs['isDirty']);
         unset( $inputs['__rememberable']);
@@ -24,6 +23,5 @@ class SettingsController extends Controller
             setting()->save();
         }
         return redirect()->route('settings')->with('success', 'Settings updated!');
-        // return response()->json('success', 'Settings updated!');
     }
 }

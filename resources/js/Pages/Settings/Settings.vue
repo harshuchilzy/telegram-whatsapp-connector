@@ -4,13 +4,14 @@ import { Head, useForm, usePage } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
 import Swal from 'sweetalert2';
 import { ref, onUpdated } from 'vue';
+import axios from 'axios';
 
 
 const props = defineProps({
     token: Object,
     settings: Object,
     flash: Object,
-    
+
 })
 onUpdated(() => {
     if (props.flash.success) {
@@ -19,8 +20,8 @@ onUpdated(() => {
             title: props.flash.success,
             showConfirmButton: false,
             timer: 1500
-            })
-    }else if(props.flash.error){
+        })
+    } else if (props.flash.error) {
         Swal.fire(
             'Fail!',
             props.flash.error,
@@ -43,8 +44,9 @@ const tokenForm = useForm({
     token_name: ''
 })
 
-function submitToken() {
-    Inertia.post(route('user.token.create', props.token), tokenForm);
+const token = ref('')
+async function submitToken() {
+    token.value = await axios.post(route('user.token.generate', props.token), tokenForm);
 }
 
 const ig = useForm({
@@ -56,7 +58,7 @@ const ig = useForm({
     igUsername: props.settings.igUsername,
     igPassword: '',
 });
-function submitIG(){
+function submitIG() {
     Inertia.post(route('settings.store'), ig);
 }
 
@@ -193,10 +195,10 @@ function submitIG(){
                                 <p class="text-sm mt-1">Path should enter WITHOUT tailing slash /</p>
                             </div>
                             <div class="flex items-center justify-between">
-                                <button  v-on:click="showAlert" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                                <button v-on:click="showAlert" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                                     Authenticate
                                 </button>
-                            </div>                        
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -205,62 +207,28 @@ function submitIG(){
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 my-4">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
-                        <form @submit.prevent="submitToken" class="px-8 pt-6 pb-8 mb-4">
-
-                            <h1 class="my-3 font-bold">Token</h1>
+                        <form @submit.prevent="submitToken" class="p-6">
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="mb-4">
                                     <label class="block text-gray-700 text-sm font-bold mb-2" for="match_case">
                                         Token Name
                                     </label>
                                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="token_name" type="token" v-model="tokenForm.token_name" placeholder="Token Name">
+                                    <div v-if="token">
+                                        <div class="mt-5 bg-blue-200 p-1 rounded shadow text-center">{{ token.data }}</div>
+                                        <p class="text-xs mt-2">This will appear only onece, generate with caution. Once you generate, this API token must add to the communication server. Contact developers for that.</p>
+                                    </div>
                                 </div>
-
                             </div>
                             <div class="flex items-center justify-between">
                                 <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-                                    Get Token
+                                    Generate Token
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <pre> 
-                        {{output}}
-                        </pre> 
         </div>
     </AuthenticatedLayout>
 </template>
-
-<script> 
-    export default {
-        mounted() {
-            console.log('Component mounted.')
-        },
-        data() {
-            return {
-              title: 'success',
-              description: 'Settings updated!',
-              output: ''
-            };
-        },
-        methods: {
-            formStore(e) {
-                e.preventDefault();
-                let currentObj = this;
-                axios.post('/store', {
-                    title: this.title,
-                    description: this.description
-                })
-                .then(function (response) {
-                    currentObj.output = response.data;
-                    flash('Post Created Successfully', 'success');
-                })
-                .catch(function (error) {
-                    currentObj.output = error;
-                });
-            }
-        }
-    }
-</script> 

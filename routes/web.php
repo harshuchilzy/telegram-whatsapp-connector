@@ -29,20 +29,16 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function(){
     
-    // Route::get('/', function () {
-    //     return Inertia::render('Dashboard');
-    // })->name('dashboard');
     Route::get('/', [\App\Http\Controllers\FrontendController::class, 'userDetails'])->name('dashboard');
 
     Route::get('/messages', [\App\Http\Controllers\FrontendController::class, 'messages'])->name('messages');
 
-
     Route::get('profile', [\App\Http\Controllers\UserController::class, 'profile'])->name('user.profile');
 
-    Route::post('/tokens/create', function (Request $request) {
+    Route::post('/tokens/generate', function (Request $request) {
         $token = $request->user()->createToken($request->token_name);
-        return ['token' => $token->plainTextToken];
-    })->name('user.token.create');
+        return response()->json($token->plainTextToken);
+    })->name('user.token.generate');
 
     Route::get('telegram', [\App\Http\Controllers\TelegramController::class, 'initClient'])->name('telegram.dashboard');
     Route::get('telegram/settings', [\App\Http\Controllers\TelegramController::class, 'settings'])->name('telegram.settings');
