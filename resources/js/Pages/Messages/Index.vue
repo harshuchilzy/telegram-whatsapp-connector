@@ -47,7 +47,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="accepted in accepted" :key="accepted.id" class="bg-white border-b border-gray-100 text-black">
+                                        <tr v-for="accepted in accepted.data" :key="accepted.id" class="bg-white border-b border-gray-100 text-black">
                                             <th scope="row" class="px-6 py-4 font-medium text-black dark:text-dark whitespace-nowrap">
                                                 {{ accepted.direction }}
                                             </th>
@@ -64,6 +64,8 @@
                                         </tr>
                                     </tbody>
                                 </table> 
+                                <Pagination class="my-2" :links="accepted.links"/>
+
                             </div>
 
                             <div class="p-6 bg-white border-b border-gray-200 col-span-5">
@@ -86,7 +88,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="message in messages" :key="message.id"  class="bg-white border-b border-gray-100 text-black" >
+                                        <tr v-for="message in messages.data" :key="message.id"  class="bg-white border-b border-gray-100 text-black" >
                                         
                                                 <th scope="row" class="px-6 py-4 font-medium text-black dark:text-dark whitespace-nowrap">
                                                     {{ message.direction }}
@@ -104,6 +106,7 @@
                                         </tr>
                                     </tbody>
                                 </table> 
+                                <Pagination class="my-2" :links="messages.links"/>
                             
                             </div>
                             
