@@ -56,6 +56,7 @@ onUpdated(() => {
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <form @submit.prevent="submit" class="px-8 pt-6 pb-8 mb-4">
                     <input class="shadow d-none" id="id" type="text" v-model="form.id" placeholder="User Name" hidden>
 
@@ -94,7 +95,8 @@ onUpdated(() => {
                                     Update
                                 </button>
                             </div>
-                        </form>
+                </form>
+                </div>
             </div>
         </div>
     </AuthenticatedLayout>

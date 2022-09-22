@@ -268,52 +268,53 @@ class TelegramController extends Controller
 
     public function test()
     {
-        $msg = 'EURUSD SELL @ 0.9960
+        // $msg = 'EURUSD SELL @ 0.9960
 
-        TP: 0.9956 (scalper)
-        TP: 0.9953 (intraday)
-        TP: 0.9955 (swing)
-        SL: 0.9978
+        // TP: 0.9956 (scalper)
+        // TP: 0.9953 (intraday)
+        // TP: 0.9955 (swing)
+        // SL: 0.9978
 
-        ▪️Use money management 2-3%';
+        // ▪️Use money management 2-3%';
 
-        $filtered = $this->filter_data($msg);
+        // $filtered = $this->filter_data($msg);
 
-        $stopLosses = array_filter($filtered, function($data){
-            return $data['type'] == 'stop-loss';
-        });
-        foreach($stopLosses as $sl){
-            $stopLostPoints = $this->filterTradeValues($msg, $sl['data']);
-        }
+        // $stopLosses = array_filter($filtered, function($data){
+        //     return $data['type'] == 'stop-loss';
+        // });
+        // foreach($stopLosses as $sl){
+        //     $stopLostPoints = $this->filterTradeValues($msg, $sl['data']);
+        // }
 
-        $tradeFilters = array_filter($filtered, function($data){
-            return $data['type'] == 'trade';
-        });
-        $tradeType = array_values($tradeFilters)[0]['data'];
+        // $tradeFilters = array_filter($filtered, function($data){
+        //     return $data['type'] == 'trade';
+        // });
+        // $tradeType = array_values($tradeFilters)[0]['data'];
         // foreach($tradeFilters as $trade){
         //     $trades = $this->filterTradeValues($msg, $trade['data']);
         // }
 
-        $entryFilters = array_filter($filtered, function($data){
-            return $data['type'] == 'entry';
-        });
-        foreach($entryFilters as $entry){
-            $entryPoints = $this->filterTradeValues($msg, $entry['data']);
-        }
+        // $entryFilters = array_filter($filtered, function($data){
+        //     return $data['type'] == 'entry';
+        // });
+        // foreach($entryFilters as $entry){
+        //     $entryPoints = $this->filterTradeValues($msg, $entry['data']);
+        // }
 
-        $profitFilters = array_filter($filtered, function($data){
-            return $data['type'] == 'take-profit';
-        });
-        foreach($profitFilters as $tp){
-            $takeProfits = $this->filterTradeValues($msg, $tp['data']);
-        }
+        // $profitFilters = array_filter($filtered, function($data){
+        //     return $data['type'] == 'take-profit';
+        // });
+        // foreach($profitFilters as $tp){
+        //     $takeProfits = $this->filterTradeValues($msg, $tp['data']);
+        // }
             
-        echo '<pre>';
-        print_r($takeProfits);
-        echo '</pre>';
+        // echo '<pre>';
+        // print_r($takeProfits);
+        // echo '</pre>';
         
         // echo '<pre>';
         // print_r($entryPoints[0]);
         // echo '</pre>';
+        echo "dayz";
     }
 }
