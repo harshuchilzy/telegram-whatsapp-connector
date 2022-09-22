@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 
+
 class UserController extends Controller
 {
     public function profile()
@@ -29,26 +30,32 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         if(!empty($request->password)){
-            $user->password = Hash::make($request->password);
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,id'.$user->id,
+                'password' => ['required','min:8'],
+                'password_confirm' => ['required','same:password']
+            ]);
+            $user = User::find($request->id);
+            $user->update(([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password)
+            ]));
+        }else{
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email'.$user->id,
+            ]);
+            $user = User::find($request->id);
+            $user->update(([
+                'name' => $request->name,
+                'email' => $request->email,
+            ]));
         }
-        if(!empty($request->name)){
-            $user->name = $request->name;
-        }
-        if(!empty($request->email)){
-            $user->email = $request->email;
-        }
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users'.$user->id,
-            'password_confirm' => ['same:password']
-        ]);
-        $user = User::find($request->id);
-        // $user->update(([
-        //     'name' => $request->name,
-        //     'email' => $request->email,
-        //     'password' => Hash::make($request->password),
-        // ]));
-        $user->save();
+       
+        
+        // $user->save();
         
         return redirect()->route('user.profile')->with('success', 'User updated!');
     }
