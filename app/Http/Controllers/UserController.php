@@ -28,17 +28,27 @@ class UserController extends Controller
     }
     public function update(Request $request, User $user)
     {
+        if(!empty($request->password)){
+            $user->password = Hash::make($request->password);
+        }
+        if(!empty($request->name)){
+            $user->name = $request->name;
+        }
+        if(!empty($request->email)){
+            $user->email = $request->email;
+        }
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => 'required|string|email|max:255|unique:users'.$user->id,
+            'password_confirm' => ['same:password']
         ]);
         $user = User::find($request->id);
-        $user->update(([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]));
+        // $user->update(([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'password' => Hash::make($request->password),
+        // ]));
+        $user->save();
         
         return redirect()->route('user.profile')->with('success', 'User updated!');
     }
