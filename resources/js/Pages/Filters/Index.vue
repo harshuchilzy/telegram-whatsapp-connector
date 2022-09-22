@@ -27,9 +27,9 @@
             <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="grid grid-cols-8 gap-4">
+                    <div class="grid grid-cols-10 gap-4">
                         <div class="p-6 bg-white border-b border-gray-200 col-span-5">
-                            <a class="float-left mb-6 px-3 py-1 bg-blue-600 rounded-full text-white hover:bg-blue-700" :href="route('filters.create')">Add Trading Filters</a>
+                            <a class="float-left mb-6 px-3 py-1 bg-blue-600 rounded-full text-white hover:bg-blue-700" :href="route('filters.trading')">Add Trading Filters</a>
                             <table class="table w-full text-sm text-left text-gray-500 dark:text-gray-400" id="datatable_1">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-slate-700 dark:text-gray-400">
                                     <tr>
@@ -69,8 +69,8 @@
                             </table> 
                             <Pagination class="my-2" :links="tradingFilters.links"/>
                         </div>
-                        <div class="p-6 bg-white border-b border-gray-200 col-span-3">
-                            <a class="float-right mb-6 px-3 py-1 bg-blue-600 rounded-full text-white hover:bg-blue-700" :href="route('filters.create')">Add Currency Pairs</a>
+                        <div class="p-6 bg-white border-b border-gray-200 col-span-5">
+                            <a class="float-right mb-6 px-3 py-1 bg-blue-600 rounded-full text-white hover:bg-blue-700" :href="route('filters.currency')">Add Currency Pairs</a>
                             <table class="table w-full text-sm text-left text-gray-500 dark:text-gray-400" id="datatable_1">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-slate-700 dark:text-gray-400">
                                     <tr>

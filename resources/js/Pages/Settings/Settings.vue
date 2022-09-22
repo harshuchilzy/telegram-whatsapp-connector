@@ -79,35 +79,35 @@ function submitIG() {
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <form @submit.prevent="submit" class="px-8 pt-6 pb-8 mb-4">
-                            <h1 class="my-3 font-bold">Whatsapp Section</h1>
+
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="mb-4">
+                                    <h1 class="my-3 font-bold">Whatsapp Section</h1>
                                     <label class="block text-gray-700 text-sm font-bold mb-2" for="match_case">
                                         Whatsapp Number
                                     </label>
                                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="whatsapp_number" type="text" v-model="form.whatsappNumber" placeholder="Whatsapp Number">
                                 </div>
-                            </div>
 
-                            <h1 class="my-3 font-bold">Telegram Details</h1>
-                            <div class="grid grid-cols-2 gap-4">
                                 <div class="mb-4">
+                                     <h1 class="my-3 font-bold">Telegram Details</h1>
                                     <label class="block text-gray-700 text-sm font-bold mb-2" for="match_case">
                                         Chat ID
                                     </label>
                                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="chat_id" type="text" v-model="form.chat_id" placeholder="Chat ID">
                                 </div>
-                            </div>
 
-                            <h1 class="my-3 font-bold">General Settings</h1>
+                            </div>
+                           
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="mb-4">
+                                    <h1 class="my-3 font-bold">General Settings</h1>
                                     <label class="block text-gray-700 text-sm font-bold mb-2" for="match_case">
                                         Email
                                     </label>
                                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="mail" v-model="form.email" placeholder="Email">
                                 </div>
-                                <div class="mb-4 md:items-center md:flex">
+                                <div class="mb-4 md:items-center md:flex mt-5">
                                     <label class="md:w-2/3 block text-gray-500 font-bold mt-5">
                                         <input class="mr-2 leading-tight" type="checkbox" id="system_status" v-model="form.system_status" checked>
                                         <span class="text-sm">

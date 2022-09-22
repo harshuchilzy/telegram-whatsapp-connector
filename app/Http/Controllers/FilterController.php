@@ -35,6 +35,12 @@ class FilterController extends Controller
     {
         return inertia()->render('Filters/Create');
     }
+    public function trading(){
+        return inertia()->render('Filters/Trading');
+    }
+    public function currency(){
+        return inertia()->render('Filters/Currency');
+    }
 
     /**
      * Store a newly created resource in storage.
