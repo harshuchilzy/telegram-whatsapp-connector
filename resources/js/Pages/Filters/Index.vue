@@ -77,9 +77,6 @@
                                         <th scope="col" class="px-6 py-3">
                                             Filter Word
                                         </th>
-                                        <!-- <th scope="col" class="px-6 py-3">
-                                            Exact match
-                                        </th> -->
                                         <th scope="col" class="px-6 py-3">
                                             Type
                                         </th>
@@ -93,9 +90,6 @@
                                         <th scope="row" class="px-6 py-4 font-medium text-black dark:text-dark whitespace-nowrap">
                                             {{ filter.match_case }}
                                         </th>
-                                        <!-- <td class="px-6 py-4">
-                                            {{filter.exact_match}}
-                                        </td> -->
                                         <td class="px-6 py-4">
                                             {{filter.type}}
                                         </td>

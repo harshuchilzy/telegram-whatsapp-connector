@@ -33,13 +33,15 @@ class FilterController extends Controller
      */
     public function create()
     {
-        return inertia()->render('Filters/Create');
+        // code
     }
-    public function trading(){
-        return inertia()->render('Filters/Trading');
+
+    public function createTradingFilter(){
+        return inertia()->render('Filters/CreateTradingFilter');
     }
-    public function currency(){
-        return inertia()->render('Filters/Currency');
+
+    public function createCurrencyFilter(){
+        return inertia()->render('Filters/CreateCurrencyFilter');
     }
 
     /**

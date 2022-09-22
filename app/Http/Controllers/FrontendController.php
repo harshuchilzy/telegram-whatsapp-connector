@@ -55,8 +55,8 @@ class FrontendController extends Controller
     }
     
     public function messages(){
-        $messages = Message::where('action', 'Rejected')->get();
-        $accepted = Message::where('action', 'Accepted')->get();
+        $messages = Message::where('action', 'rejected')->get();
+        $accepted = Message::where('action', '!=', 'rejected')->get();
         return inertia()->render('Messages/Index', [
             'messages' => $messages,
             'accepted' => $accepted,
