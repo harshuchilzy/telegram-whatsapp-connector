@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Events\TelegramEvent;
 use App\Http\Controllers\Controller;
+use App\Models\Action;
 use App\Models\Filter;
 use App\Models\Message;
 use GuzzleHttp\Client;
@@ -20,11 +21,8 @@ class TelegramController extends Controller
         $this->headers = [
             'Content-Type' => 'application/json; charset=UTF-8',
             'Accept' => 'application/json; charset=UTF-8',
-            // 'X-IG-API-KEY' => '3699ffa0f7aceda59e386f92e2d9b465e9cedb2f',
-            'X-IG-API-KEY' => setting('igApiKey'),
-            // 'IG-ACCOUNT-ID' => 'Z4YNKA'
+            'X-IG-API-KEY' => setting('igApiKey'), 
             'IG-ACCOUNT-ID' => setting('igAccId')
-
         ];
     }
     public function webhook(Request $request)
@@ -33,13 +31,13 @@ class TelegramController extends Controller
         if($type == 'incoming-telegram'){
             $content = $request->get('content');
             event(new TelegramEvent($content));
-            Message::create([
+            $message = Message::create([
                 'direction' => 'incoming',
                 'sender' => $content['phone'],
-                'message' => $content['text']
+                'message' => $content['text'],
             ]);
 
-            $this->doTrade($content['text']);
+            $this->doTrade($content['text'], $message);
             
             return response('success', 200);
         }elseif($type == 'qr'){
@@ -50,7 +48,7 @@ class TelegramController extends Controller
         }
     }
 
-    public function doTrade($message)
+    public function doTrade($message, $messageCollection)
     {
         $filtered = $this->filter_data($message);
 
@@ -89,13 +87,7 @@ class TelegramController extends Controller
         });
         foreach($profitFilters as $tp){
             $takeProfits = $this->filterTradeValues($message, $tp['data']);
-            // Log::info($takeProfits[0]);
-            // return;
         }
-
-        // if($tradeType == 'SELL' AND (floatval($epic['bid']) < floatval($entryPoint) AND floatval($entryPoint > $profit)) ){
-            
-        // }
 
         $body = [
             "epic" => $epic['epic'],
@@ -136,7 +128,9 @@ class TelegramController extends Controller
             $body['orderType'] = 'LIMIT';
         }
         else{
-            (new WhatsappController)->sendWhatsapp('MISSED TRADE');
+            (new WhatsappController)->sendWhatsapp('MISSED TRADE', $messageCollection);
+            $messageCollection->action = 'rejected';
+            $messageCollection->save();
             return;
         }
 
@@ -153,16 +147,13 @@ class TelegramController extends Controller
                 $body['limitLevel'] = $profit;
             }
 
-            Log::info($epic['bid']);
-            Log::info($body);
-            Log::info(setting('igPathUrl') . $apiPath);
-
             $response = Http::withHeaders($headers)->withToken($token)->post(setting('igPathUrl').$apiPath, $body);
             $tradeBody = $response->body();
             $tradeBody = json_decode($tradeBody);
-            Log::info($response->body());
             if(!empty($tradeBody->errorCode)){
-                (new WhatsappController)->sendWhatsapp('ERROR IN TRADE ' . $tradeBody->errorCode);
+                (new WhatsappController)->sendWhatsapp('ERROR IN TRADE ' . $tradeBody->errorCode, $messageCollection);
+                $messageCollection->action = 'rejected';
+                $messageCollection->save();
             }else{
                 $dealRef[] = $tradeBody->dealReference;
             }
@@ -174,9 +165,11 @@ class TelegramController extends Controller
                 $dealConfirmation = Http::withHeaders($this->headers)->withToken($token)->get(setting('igPathUrl').'/confirms/' . $ref);
                 $body = $dealConfirmation->body();
                 $body = json_decode($body);
-
+                $this->saveToAction($messageCollection, 'igAPI', $dealConfirmation->body(), $body->dealStatus, $messageCollection);
                 //Send Whatsapp Message
-                (new WhatsappController)->sendWhatsapp('Deal Status: ' .$body->dealStatus . ', Reason: ' . $body->reason);
+                (new WhatsappController)->sendWhatsapp('Deal Status: ' .$body->dealStatus . ', Reason: ' . $body->reason, $messageCollection);
+                $messageCollection->action = $body->dealStatus;
+                $messageCollection->save();
             }
         }
     }
@@ -223,10 +216,8 @@ class TelegramController extends Controller
     public function getIGToken()
     {
         $body = [
-            // "identifier" => "harshanalaravel",
             "identifier" => setting('igUsername'),
             "password" => setting('igPassword')
-            // "password" => "Elakiri123"
         ];
         $headers = $this->headers;
         $headers['VERSION'] = '3';
@@ -235,7 +226,6 @@ class TelegramController extends Controller
         $body = $response->body();
         $body = json_decode($body);
         $accessToken = $body->oauthToken->access_token;
-        // Log::info('Token ' . $accessToken);
         return $accessToken;
     }
 
@@ -262,15 +252,19 @@ class TelegramController extends Controller
         return $epics[0];
     }
 
-    public function createPosition($epic, $direction, $size, $level, $stopLevel, $currencyCode)
+    public function saveToAction($collection = null, $action = '', $log = '', $status = '')
     {
-        # code...
+        $actionData = Action::create([
+            'model' => $collection!== null ? get_class($collection) : '',
+            'model_id' => $collection!== null ? $collection->id : '',
+            'action' => $action,
+            'log' => $log,
+            'status' => $status
+        ]);
+        return $actionData;
     }
 
-    public function callToIG($method, $endPoint, $data){
-        $response = Http::withHeaders($this->headers)->{$method}(setting('igPathUrl') . $endPoint, $data);
-
-    }
+    
 
     public function test()
     {

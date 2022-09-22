@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Events\WhatsappEvent;
+use App\Models\Action;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -30,7 +31,7 @@ class WhatsappController extends Controller
         }
     }
 
-    public function sendWhatsapp($message)
+    public function sendWhatsapp($message, $collection = null)
     {
         $client = new Client();
         $res = $client->request('POST', env('TELESAPP_SERVER') . '/forward-msg', [
@@ -38,6 +39,14 @@ class WhatsappController extends Controller
                 'to' => setting('whatsappNumber'),
                 'message' => $message
             ]
+        ]);
+
+        $actionData = Action::create([
+            'model' => $collection!== null ? get_class($collection) : '',
+            'model_id' => $collection!== null ? $collection->id : '',
+            'action' => 'whatsapp',
+            'log' => json_encode($res),
+            'status' => 'sent'
         ]);
         
         // If the status code is 200 theng et the body contents

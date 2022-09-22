@@ -58,8 +58,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     // FIlters/Parsers
     Route::resource('filters', \App\Http\Controllers\FilterController::class);
-    Route::get('/trading', [\App\Http\Controllers\FilterController::class, 'trading'])->name('filters.trading');
-    Route::get('/currency', [\App\Http\Controllers\FilterController::class, 'currency'])->name('filters.currency');
+    Route::get('/create/trading', [\App\Http\Controllers\FilterController::class, 'createTradingFilter'])->name('filters.trading');
+    Route::get('/create/currency', [\App\Http\Controllers\FilterController::class, 'createCurrencyFilter'])->name('filters.currency');
 
     // Settings
     Route::get('settings', [\App\Http\Controllers\SettingsController::class, 'settings'])->name('settings');
