@@ -31,14 +31,19 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'min:8'],
+            'confirmed' => ['required', 'min:8', 'same:password']
         ]);
         $user = User::find($request->id);
-        $user->update(([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]));
+        // $user->update(([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'password' => Hash::make($request->password),
+        // ]));
+        if(!empty($request->password)){
+            $user->password = Hash::make($request->password);
+        }
+        $user->save();
         
         return redirect()->route('user.profile')->with('success', 'User updated!');
     }
