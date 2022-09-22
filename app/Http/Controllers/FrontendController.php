@@ -39,8 +39,11 @@ class FrontendController extends Controller
         return $accessToken;
     }
 
-    public function userDetails()
+    public function dashboard()
     {
+        if(empty(setting('igPathUrl')) and empty(setting('igUsername')) and empty(setting('igPassword')) and empty(setting('igApiKey'))){
+            return redirect()->route('settings');
+        }
         $acoount_headers = $this->headers;
         $accessToken = $this->authenticateIG();
         $accounts = Http::withHeaders($acoount_headers)->withToken($accessToken)->get(setting('igPathUrl').'/accounts');

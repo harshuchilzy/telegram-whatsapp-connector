@@ -29,7 +29,7 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function(){
     
-    Route::get('/', [\App\Http\Controllers\FrontendController::class, 'userDetails'])->name('dashboard');
+    Route::get('/', [\App\Http\Controllers\FrontendController::class, 'dashboard'])->name('dashboard');
 
     Route::get('/messages', [\App\Http\Controllers\FrontendController::class, 'messages'])->name('messages');
 
