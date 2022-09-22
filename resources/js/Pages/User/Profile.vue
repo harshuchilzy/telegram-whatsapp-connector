@@ -13,7 +13,7 @@ const form = useForm({
     id: props.user.id,
     name: props.user.name,
     email: props.user.email,
-    password: props.user.password
+    password: ''
 })
 const props = defineProps({
     user: Object,
@@ -59,7 +59,7 @@ onUpdated(() => {
                 <form @submit.prevent="submit" class="px-8 pt-6 pb-8 mb-4">
                     <input class="shadow d-none" id="id" type="text" v-model="form.id" placeholder="User Name" hidden>
 
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-2 gap-4">
                             <div class="mb-4">
                                         <label class="block text-gray-700 text-sm font-bold mb-2" for="match_case">
                                             Name
@@ -80,6 +80,13 @@ onUpdated(() => {
                                             </label>
                                             <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password"  type="password" v-model="form.password" placeholder="New Password" required>
                                             <span v-if="props.errors.password" class="text-red-500 text-sm">{{props.errors.password}}</span>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2" for="match_case">
+                                            Confirm Password
+                                            </label>
+                                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password"  type="password" v-model="form.password_confirm" placeholder="Confirm Password" required>
+                                            <span v-if="props.errors.password_confirm" class="text-red-500 text-sm">{{props.errors.password_confirm}}</span>
                                         </div>
                             </div>
                             <div class="flex items-center justify-between mt-3">
