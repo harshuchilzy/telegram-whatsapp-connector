@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
 
 class UserController extends Controller
 {
@@ -23,5 +25,16 @@ class UserController extends Controller
         $user->telegram_session = $inputs['session'];
         $user->save();
         return response()->json(['status' => 'Session stored '], 200);
+    }
+    public function update(Request $request, User $user)
+    {
+        $user = User::find($request->id);
+        $user->update(([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]));
+    
+        return redirect()->route('user.profile')->with('success', 'User updated!');
     }
 }

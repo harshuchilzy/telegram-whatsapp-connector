@@ -97,6 +97,9 @@ Echo.channel('telegramChannel').listen('TelegramEvent', (e) => {
                                     </template>
 
                                     <template #content>
+                                        <DropdownLink :href="route('user.profile')"  as="button">
+                                            Profile
+                                        </DropdownLink>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
                                             Log Out
                                         </DropdownLink>

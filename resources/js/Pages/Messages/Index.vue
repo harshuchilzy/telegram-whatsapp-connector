@@ -64,7 +64,6 @@
                                         </tr>
                                     </tbody>
                                 </table> 
-                            
                             </div>
 
                             <div class="p-6 bg-white border-b border-gray-200 col-span-5">

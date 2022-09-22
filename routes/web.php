@@ -34,6 +34,9 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     Route::get('/messages', [\App\Http\Controllers\FrontendController::class, 'messages'])->name('messages');
 
     Route::get('profile', [\App\Http\Controllers\UserController::class, 'profile'])->name('user.profile');
+    Route::put('profile_update', [\App\Http\Controllers\UserController::class, 'update'])->name('user.profile.update');
+
+    
 
     Route::post('/tokens/generate', function (Request $request) {
         $token = $request->user()->createToken($request->token_name);
