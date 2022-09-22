@@ -78,14 +78,14 @@ onUpdated(() => {
                                             <label class="block text-gray-700 text-sm font-bold mb-2" for="match_case">
                                             Password
                                             </label>
-                                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password"  type="password" v-model="form.password" placeholder="New Password" required>
+                                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password"  type="password" v-model="form.password" placeholder="New Password">
                                             <span v-if="props.errors.password" class="text-red-500 text-sm">{{props.errors.password}}</span>
                                         </div>
                                         <div class="mb-4">
                                             <label class="block text-gray-700 text-sm font-bold mb-2" for="match_case">
                                             Confirm Password
                                             </label>
-                                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password"  type="password" v-model="form.password_confirm" placeholder="Confirm Password" required>
+                                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password"  type="password" v-model="form.password_confirm" placeholder="Confirm Password">
                                             <span v-if="props.errors.password_confirm" class="text-red-500 text-sm">{{props.errors.password_confirm}}</span>
                                         </div>
                             </div>
