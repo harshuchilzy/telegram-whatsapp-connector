@@ -26,7 +26,7 @@
     
             <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="grid grid-cols-10 gap-4">
                         <div class="p-6 bg-white border-b border-gray-200 col-span-5">
                             <a class="float-left mb-6 px-3 py-1 bg-blue-600 rounded-full text-white hover:bg-blue-700" :href="route('filters.trading')">Add Trading Filters</a>
