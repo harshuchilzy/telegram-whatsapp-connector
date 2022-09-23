@@ -11,7 +11,7 @@ const props = defineProps({
 
 function formatDate(dateString){
     var date = new Date(dateString);
-    return moment(date).format('Do, MMM YYYY, h:mm:ss a');
+    return moment(date).format('Do, MMM YYYY, h:mm:ss.SSS a');
 }
 
 </script>

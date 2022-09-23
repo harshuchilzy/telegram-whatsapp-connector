@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('sender')->nullable();
             $table->text('message')->nullable();
             $table->string('action')->nullable();
-            $table->timestamps();
+            $table->timestamps(6);
         });
     }
 
