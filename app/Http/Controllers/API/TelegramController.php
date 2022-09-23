@@ -96,9 +96,9 @@ class TelegramController extends Controller
             "direction" => $tradeType,
             "size" => '1',
             // "orderType" => "LIMIT", // Market
-            "level" => $entryPoint,
+            "level" => number_format($entryPoint, 4),
             "guaranteedStop" => false,
-            "stopLevel" => $stopLoss, //stop loss
+            "stopLevel" => number_format($stopLoss, 4), //stop loss
             "stopDistance" => null,
             "forceOpen" => false,
             // "limitLevel" => $takeprofit, //take profit
@@ -130,17 +130,21 @@ class TelegramController extends Controller
         }elseif($tradeType == 'BUY' AND (floatval($epic['offer'] > floatval($entryPoint)))){
             $apiPath = '/workingorders/otc';
             $body['type'] = 'LIMIT';
+            unset($body['forceOpen']);
+            unset($body['quoteId']);
+            $body['timeInForce'] = 'GOOD_TILL_CANCELLED';
         }
         else{
             $tmpMsg = 'Trade: ' . $tradeType . ', Current: ' .floatval($epic['offer']) . ', Entry: ' . floatval($entryPoint) . ', TP1: ' . floatval($takeProfits[0]); 
             (new WhatsappController)->sendWhatsapp('MISSED TRADE, Values: ' . $tmpMsg, $messageCollection);
             $messageCollection->action = 'rejected';
             $messageCollection->save();
+            Log::info('Terminating');
             return;
         }
         $tmpMsg = 'Trade: ' . $tradeType . ', Current: ' .floatval($epic['offer']) . ', Entry: ' . floatval($entryPoint) . ', TP1: ' . floatval($takeProfits[0]) . ', API: ' . $apiPath; 
         Log::info($tmpMsg);
-        Log::info($body);
+        // Log::info($body);
 
         $headers = $this->headers;
 
@@ -150,11 +154,12 @@ class TelegramController extends Controller
         foreach($takeProfits as $profit){
             
             if($sendTrades >= 1){
-                $body['limitLevel'] = $takeProfits[0];
+                $body['limitLevel'] = number_format($takeProfits[0], 4);
             }else{
-                $body['limitLevel'] = $profit;
+                $body['limitLevel'] = number_format($profit, 4);
             }
 
+            Log::info('Looping');
             Log::info($body);
 
             $response = Http::withHeaders($headers)->withToken($token)->post(setting('igPathUrl').$apiPath, $body);
@@ -169,6 +174,7 @@ class TelegramController extends Controller
                 $dealRef[] = $tradeBody->dealReference;
             }
             $sendTrades++;
+
         }
 
         if(!empty($dealRef)){
