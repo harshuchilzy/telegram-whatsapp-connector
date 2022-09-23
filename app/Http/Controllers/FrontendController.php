@@ -58,8 +58,8 @@ class FrontendController extends Controller
     }
     
     public function messages(){
-        $messages = Message::where('action', 'rejected')->paginate(15);
-        $accepted = Message::where('action', '!=', 'rejected')->paginate(15);
+        $messages = Message::where('action', 'rejected')->orderBy('created_at', 'desc')->paginate(15);
+        $accepted = Message::where('action', '!=', 'rejected')->orderBy('created_at', 'desc')->paginate(15);
         return inertia()->render('Messages/Index', [
             'messages' => $messages,
             'accepted' => $accepted,

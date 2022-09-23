@@ -101,22 +101,22 @@ function submitIG() {
 
                                     </div>
                                 
-                                    <div class="grid grid-cols-2 gap-4">
+                                    <div class="">
                                         <div class="mb-4">
                                             <h1 class="my-3 font-bold">General Settings</h1>
                                             <label class="block text-gray-700 text-sm font-bold mb-2" for="match_case">
                                                 Email
                                             </label>
-                                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="mail" v-model="form.email" placeholder="Email">
+                                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" v-model="form.email" placeholder="Email">
                                         </div>
-                                        <div class="mb-4 md:items-center md:flex mt-5">
+                                        <!-- <div class="mb-4 md:items-center md:flex mt-5">
                                             <label class="md:w-2/3 block text-gray-500 font-bold mt-5">
                                                 <input class="mr-2 leading-tight" type="checkbox" id="system_status" v-model="form.system_status" checked>
                                                 <span class="text-sm">
                                                     System Status
                                                 </span>
                                             </label>
-                                        </div>
+                                        </div> -->
                                     </div>
 
 
@@ -131,7 +131,7 @@ function submitIG() {
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-2">
                             <div class="p-6 bg-white border-b border-gray-200">
                                 <form @submit.prevent="submitToken" class="p-6">
-                                    <div class="grid grid-cols-2 gap-4">
+                                    <div class="">
                                         <div class="mb-4">
                                             <label class="block text-gray-700 text-sm font-bold mb-2" for="match_case">
                                                 Token Name

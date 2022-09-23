@@ -41,17 +41,19 @@ class WhatsappController extends Controller
             ]
         ]);
 
-        $actionData = Action::create([
-            'model' => $collection!== null ? get_class($collection) : '',
-            'model_id' => $collection!== null ? $collection->id : '',
-            'action' => 'whatsapp',
-            'log' => json_encode($res),
-            'status' => 'sent'
-        ]);
         
+        $response_data = '';
         // If the status code is 200 theng et the body contents
         if ($res->getStatusCode() == 200) {
             $response_data = $res->getBody()->getContents();
         }
+
+        $actionData = Action::create([
+            'model' => $collection !== null AND !is_string($collection) ? get_class($collection) : '',
+            'model_id' => $collection!== null AND !is_string($collection) ? $collection->id : '',
+            'action' => 'whatsapp',
+            'log' => json_encode($res),
+            'status' => $response_data
+        ]);
     }
 }

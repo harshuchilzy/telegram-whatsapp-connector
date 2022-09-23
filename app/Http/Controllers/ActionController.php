@@ -14,7 +14,7 @@ class ActionController extends Controller
      */
     public function index()
     {
-        $actions = Action::paginate(15);
+        $actions = Action::orderBy('created_at', 'desc')->paginate(15);
         return inertia()->render('Action/Index', [
             'actions' => $actions
         ]);

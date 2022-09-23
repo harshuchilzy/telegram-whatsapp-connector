@@ -35,6 +35,7 @@ class TelegramController extends Controller
                 'direction' => 'incoming',
                 'sender' => $content['phone'],
                 'message' => $content['text'],
+                'status' => 'rejected'
             ]);
 
             $this->doTrade($content['text'], $message);
@@ -96,10 +97,10 @@ class TelegramController extends Controller
             "size" => '1',
             // "orderType" => "LIMIT", // Market
             "level" => $entryPoint,
-            "guaranteedStop" => "false",
+            "guaranteedStop" => false,
             "stopLevel" => $stopLoss, //stop loss
             "stopDistance" => null,
-            "forceOpen" => "false",
+            "forceOpen" => false,
             // "limitLevel" => $takeprofit, //take profit
             "limitDistance" => null,
             "quoteId" => null,
@@ -110,8 +111,8 @@ class TelegramController extends Controller
         if($tradeType == 'SELL' AND (floatval($epic['bid']) < floatval($entryPoint) AND floatval($entryPoint) > floatval($takeProfits[0])) ){ //QUESTION THIS
             $apiPath = '/positions/otc';
             $body['orderType'] = 'LIMIT';
+           
             unset($body['quoteId']);
-
         }elseif($tradeType == 'SELL' AND (floatval($epic['bid']) > floatval($entryPoint))){
             $body['type'] = 'STOP';
             $body['timeInForce'] = "GOOD_TILL_CANCELLED";
@@ -120,23 +121,30 @@ class TelegramController extends Controller
             unset($body['forceOpen']);
         }
         // Buy
-        elseif($tradeType == 'BUY' AND (floatval($epic['offer'] > floatval($entryPoint) and floatval($entryPoint) < $takeProfits[0]))){
+        elseif($tradeType == 'BUY' AND (floatval($epic['offer']) > floatval($entryPoint) and floatval($epic['offer']) < floatval($takeProfits[0]))){
             $apiPath = '/positions/otc';
+            unset($body['timeInForce']);
+            unset($body['goodTillDate']);
+            unset($body['quoteId']);
             $body['orderType'] = 'LIMIT';
         }elseif($tradeType == 'BUY' AND (floatval($epic['offer'] > floatval($entryPoint)))){
             $apiPath = '/workingorders/otc';
-            $body['orderType'] = 'LIMIT';
+            $body['type'] = 'LIMIT';
         }
         else{
-            (new WhatsappController)->sendWhatsapp('MISSED TRADE', $messageCollection);
+            $tmpMsg = 'Trade: ' . $tradeType . ', Current: ' .floatval($epic['offer']) . ', Entry: ' . floatval($entryPoint) . ', TP1: ' . floatval($takeProfits[0]); 
+            (new WhatsappController)->sendWhatsapp('MISSED TRADE, Values: ' . $tmpMsg, $messageCollection);
             $messageCollection->action = 'rejected';
             $messageCollection->save();
             return;
         }
+        $tmpMsg = 'Trade: ' . $tradeType . ', Current: ' .floatval($epic['offer']) . ', Entry: ' . floatval($entryPoint) . ', TP1: ' . floatval($takeProfits[0]) . ', API: ' . $apiPath; 
+        Log::info($tmpMsg);
+        Log::info($body);
 
         $headers = $this->headers;
 
-        $takeProfits[] = $takeProfits[0];
+        $takeProfits[] = $takeProfits[0]; // add additional TP to iterate +1
         $headers = $this->headers;
         $sendTrades = 0;
         foreach($takeProfits as $profit){
@@ -147,11 +155,14 @@ class TelegramController extends Controller
                 $body['limitLevel'] = $profit;
             }
 
+            Log::info($body);
+
             $response = Http::withHeaders($headers)->withToken($token)->post(setting('igPathUrl').$apiPath, $body);
             $tradeBody = $response->body();
             $tradeBody = json_decode($tradeBody);
             if(!empty($tradeBody->errorCode)){
                 (new WhatsappController)->sendWhatsapp('ERROR IN TRADE ' . $tradeBody->errorCode, $messageCollection);
+                $this->saveToAction($messageCollection, 'igAPI', $tradeBody->errorCode, 'trade failed');
                 $messageCollection->action = 'rejected';
                 $messageCollection->save();
             }else{
@@ -166,13 +177,13 @@ class TelegramController extends Controller
                 $body = $dealConfirmation->body();
                 $body = json_decode($body);
                 $this->saveToAction($messageCollection, 'igAPI', $dealConfirmation->body(), $body->dealStatus, $messageCollection);
+                
+                $created_time = $messageCollection->created_at;
+                $updated_time = $messageCollection->updated_at;
+                $tot_seconds =  $updated_time->diffForHumans($created_time);
+
                 //Send Whatsapp Message
-                $message = Message::get()->first();
-                $create_time = $message->created_at->format('H:i:s');
-                $update_time = $message->updated_at->format('H:i:s');
-                $duration =  intval($update_time) - intval($create_time);
-                $tot_seconds =  $duration / 3600;
-                (new WhatsappController)->sendWhatsapp('Deal Status: ' .$body->dealStatus . ', Reason: ' . $body->reason, $messageCollection . 'Trade created'.$tot_seconds);
+                (new WhatsappController)->sendWhatsapp('Deal Status: ' .$body->dealStatus . ', Reason: ' . $body->reason, $messageCollection . ', TTP: '.$tot_seconds);
                 $messageCollection->action = $body->dealStatus;
                 $messageCollection->save();
             }
