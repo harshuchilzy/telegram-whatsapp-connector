@@ -177,7 +177,7 @@ class TelegramController extends Controller
                 
                 // $created_time = $messageCollection->created_at;
                 $updated_time = $messageCollection->updated_at;
-                $tot_seconds =  $updated_time->diffForHumans(Carbon::now());
+                $tot_seconds =  $updated_time->diffInMilliseconds(Carbon::now());
 
                 //Send Whatsapp Message
                 (new WhatsappController)->sendWhatsapp('Deal Status: ' .$body->dealStatus . ', Reason: ' . $body->reason . ', TTP: '.$tot_seconds, $messageCollection);
