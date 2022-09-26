@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 use App\Models\Message;
 use Illuminate\Support\Facades\Http;
-
 use Illuminate\Http\Request;
 
 class FrontendController extends Controller
@@ -44,26 +43,43 @@ class FrontendController extends Controller
         if(empty(setting('igPathUrl')) and empty(setting('igUsername')) and empty(setting('igPassword')) and empty(setting('igApiKey'))){
             return redirect()->route('settings');
         }
-        $acoount_headers = $this->headers;
+        $account_headers = $this->headers;
         $accessToken = $this->authenticateIG();
-        $accounts = Http::withHeaders($acoount_headers)->withToken($accessToken)->get(setting('igPathUrl').'/accounts');
-        $orders = Http::withHeaders($acoount_headers)->withToken($accessToken)->get(setting('igPathUrl').'/workingorders');
-        $positions = Http::withHeaders($acoount_headers)->withToken($accessToken)->get(setting('igPathUrl').'/positions');
+        $accounts = Http::withHeaders($account_headers)->withToken($accessToken)->get(setting('igPathUrl').'/accounts');
+        $orders = Http::withHeaders($account_headers)->withToken($accessToken)->get(setting('igPathUrl').'/workingorders');
+        // $positions = Http::withHeaders($acoount_headers)->withToken($accessToken)->get(setting('igPathUrl').'/positions');
         
         return inertia()->render('Dashboard', [
             'accounts' => json_decode($accounts->body()),
             'orders' => json_decode($orders->body()),
-            'positions' => json_decode($positions->body()),
+            // 'positions' => json_decode($positions->body()),
         ]);
     }
     
     public function messages(){
-        $messages = Message::where('action', 'rejected')->orderBy('created_at', 'desc')->paginate(15);
-        $accepted = Message::where('action', '!=', 'rejected')->orderBy('created_at', 'desc')->paginate(15);
+        $messages = Message::where('action', '!=', 'accepted')->orderBy('created_at', 'desc')->paginate(15);
+        $accepted = Message::where('action', 'accepted')->where('action', '!=', 'unidentified')->orderBy('created_at', 'desc')->paginate(15);
+        $unidentified = Message::where('action', 'unidentified')->orderBy('created_at', 'desc')->paginate(15);
+
         return inertia()->render('Messages/Index', [
             'messages' => $messages,
             'accepted' => $accepted,
+            'unidentified' => $unidentified
         ]);
         
+    }
+
+    public function history()
+    {
+        return inertia()->render('Account/History');
+    }
+
+    public function fetchHistory(Request $request)
+    {
+        $dates = $request->input('dates');
+        $dates = implode('/', $dates);
+        $accessToken = $this->authenticateIG();
+        $history = Http::withHeaders($this->headers)->withToken($accessToken)->get(setting('igPathUrl').'/history/activity/' . $dates);
+        return $history;
     }
 }

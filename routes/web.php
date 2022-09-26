@@ -72,6 +72,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     Route::resource('action', \App\Http\Controllers\ActionController::class);
 
+    Route::get('/history', [\App\Http\Controllers\FrontendController::class, 'history'])->name('account.history');
+    Route::post('/fetch-history', [\App\Http\Controllers\FrontendController::class, 'fetchHistory'])->name('account.history.fetch');
 });
 
 

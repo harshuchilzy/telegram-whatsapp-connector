@@ -6,8 +6,11 @@ import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
+import Alpine from 'alpinejs';
+window.Alpine = Alpine;
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
+Alpine.start();
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

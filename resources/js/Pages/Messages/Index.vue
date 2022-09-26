@@ -7,6 +7,7 @@ import moment from 'moment'
 const props = defineProps({
     messages: Object,
     accepted: Object,
+    unidentified: Object
 });
 
 function formatDate(dateString){
@@ -121,6 +122,52 @@ function formatDate(dateString){
                                 </tbody>
                             </table>
                             <Pagination class="my-2" :links="messages.links" />
+
+                        </div>
+
+                        <div class="p-6 bg-white border-b border-gray-200 mt-6">
+                            <h1 class="mb-4 text-2xl text-yellow-600 text-center">Unidentified</h1>
+                            <table class="table w-full text-sm text-left text-gray-500 dark:text-gray-400" id="datatable_1">
+                                <thead class="text-xs text-black uppercase bg-gray-50 dark:bg-slate-700 dark:text-white">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            Directions
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Sender
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Message
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Status
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Time
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="unidentified in unidentified.data" :key="unidentified.id" class="bg-white border-b border-gray-100 text-black">
+                                        <th scope="row" class="px-6 py-4 font-medium text-black dark:text-dark whitespace-nowrap">
+                                            {{ unidentified.direction }}
+                                        </th>
+                                        <td class="px-6 py-4">
+                                            {{unidentified.sender}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{unidentified.message}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{unidentified.action}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{formatDate(unidentified.updated_at)}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <Pagination class="my-2" :links="unidentified.links" />
 
                         </div>
 

@@ -23,9 +23,12 @@
     },
     "dependencies": {
         "@chenfengyuan/vue-qrcode": "^2.0.0",
+        "alpinejs": "^3.10.3",
         "buffer": "^6.0.3",
+        "dayjs": "^1.11.5",
         "fluent-ffmpeg": "^2.1.2",
         "laravel-echo": "^1.14.0",
+        "litepie-datepicker": "^1.0.14",
         "moment": "^2.29.4",
         "pusher-js": "^7.4.0",
         "qrcode": "^1.5.1",

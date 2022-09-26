@@ -37,7 +37,7 @@ class TelegramController extends Controller
                 'direction' => 'incoming',
                 'sender' => $content['phone'],
                 'message' => $messageText,
-                'status' => 'rejected'
+                'action' => 'unidentified'
             ]);
 
             $this->doTrade($messageText, $message);
@@ -117,6 +117,7 @@ class TelegramController extends Controller
             $apiPath = '/workingorders/otc';
             unset($body['forceOpen']);
         }
+
         // Buy
         // 1. Works when entry is larger than current value
         elseif($tradeType == 'BUY' AND (floatval($epic['offer']) > floatval($entryPoint) and floatval($epic['offer']) < floatval($takeProfits[0]))){
@@ -132,15 +133,16 @@ class TelegramController extends Controller
         else{
             $tmpMsg = 'Trade: ' . $tradeType . ', Current: ' .floatval($epic['offer']) . ', Entry: ' . floatval($entryPoint) . ', TP1: ' . floatval($takeProfits[0]); 
             (new WhatsappController)->sendWhatsapp('MISSED TRADE, ' . $tmpMsg, $messageCollection);
-            $messageCollection->action = 'rejected';
+            $messageCollection->action = 'REJECTED';
             $messageCollection->save();
-            Log::info('Terminating');
             return;
         }
         $tmpMsg = 'Trade: ' . $tradeType . ', Current: ' .floatval($epic['offer']) . ', Entry: ' . floatval($entryPoint) . ', TP1: ' . floatval($takeProfits[0]) . ', API: ' . $apiPath; 
         Log::info($tmpMsg);
 
         $takeProfits[] = $takeProfits[0]; // add additional TP to iterate +1
+        $takeProfits[] = $takeProfits[0]; // add additional TP to iterate +1
+
         $headers = $this->headers;
         $sendTrades = 0;
         foreach($takeProfits as $profit){
@@ -154,43 +156,56 @@ class TelegramController extends Controller
             Log::info('Looping');
             Log::info($body);
 
+            
+
             $response = Http::withHeaders($headers)->withToken($token)->post(setting('igPathUrl').$apiPath, $body);
             $tradeBody = $response->body();
             $tradeBody = json_decode($tradeBody);
+
+            if($sendTrades > 0){
+                $messageCollection = $messageCollection->replicate();
+                $messageCollection->created_at = Carbon::now();
+                $messageCollection->save();
+            }
+
             if(!empty($tradeBody->errorCode)){
                 (new WhatsappController)->sendWhatsapp('ERROR IN TRADE ' . $tradeBody->errorCode, $messageCollection);
                 $this->saveToAction($messageCollection, 'igAPI', $tradeBody->errorCode, 'trade failed');
-                $messageCollection->action = 'rejected';
+                $messageCollection->action = $tradeBody->errorCode;
                 $messageCollection->save();
             }else{
-                $dealRef[] = $tradeBody->dealReference;
+                $dealRef = $tradeBody->dealReference;
+                $confirmation = Http::withHeaders($this->headers)->withToken($token)->get(setting('igPathUrl').'/confirms/' . $dealRef);
+                $confirmation = json_decode($confirmation->body());
+                $dealConfirmation[] = $confirmation;
+
+                if($confirmation->dealStatus == 'REJECTED'){
+                    $messageCollection->action = $confirmation->reason;
+                }else{
+                    $messageCollection->action = $confirmation->dealStatus;
+                }
+                $messageCollection->save();
             }
             $sendTrades++;
-
         }
 
-        if(!empty($dealRef)){
-            foreach($dealRef as $ref){
-                $dealConfirmation = Http::withHeaders($this->headers)->withToken($token)->get(setting('igPathUrl').'/confirms/' . $ref);
-                $body = $dealConfirmation->body();
-                $body = json_decode($body);
+        if(!empty($dealConfirmation)){
+            foreach($dealConfirmation as $ref){
+                // $dealConfirmation = Http::withHeaders($this->headers)->withToken($token)->get(setting('igPathUrl').'/confirms/' . $ref);
+                // $body = $ref->body();
 
-                $this->saveToAction($messageCollection, 'igAPI', $dealConfirmation->body(), $body->dealStatus, $messageCollection);
-                
-                // $created_time = $messageCollection->created_at;
-                
+                // $this->saveToAction($messageCollection, 'igAPI', $body, $body->dealStatus);
+                $this->saveToAction(null, 'igAPI', json_encode($ref), $ref->dealStatus);
+            
+                // $updated_time = $messageCollection->updated_at;
+                // $tot_seconds =  $updated_time->diffInMilliseconds(Carbon::now());
+                // $tot_seconds =  '';
 
-                $messageCollection->action = $body->dealStatus;
-                $messageCollection->save();
-
-                $updated_time = $messageCollection->updated_at;
-                $tot_seconds =  $updated_time->diffInMilliseconds(Carbon::now());
 
                 //Send Whatsapp Message
-                (new WhatsappController)->sendWhatsapp('Deal Status: ' .$body->dealStatus . ', Reason: ' . $body->reason . ', TTP: '.$tot_seconds, $messageCollection);
+                // (new WhatsappController)->sendWhatsapp('Deal Status: ' .$ref->dealStatus . ', Reason: ' . $ref->reason . ', TTP: '.$tot_seconds, null);
+                (new WhatsappController)->sendWhatsapp('Deal Status: ' .$ref->dealStatus . ', Reason: ' . $ref->reason, null);
 
-                //Replicating the message
-                // $messageCollection = $messageCollection->replicate();
             }
         }
     }
