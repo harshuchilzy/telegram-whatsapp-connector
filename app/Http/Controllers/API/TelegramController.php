@@ -106,6 +106,9 @@ class TelegramController extends Controller
             "currencyCode" => setting('igCurrency')
         ];
 
+        $msgTemplate = $currency . ' ' . $tradeType . ' @ ' . number_format($entryPoint, 4);
+
+
         // Sell
         if($tradeType == 'SELL' AND (floatval($epic['bid']) < floatval($entryPoint) AND floatval($epic['bid']) > floatval($takeProfits[0])) ){ //QUESTION THIS
             $apiPath = '/positions/otc';
@@ -131,14 +134,14 @@ class TelegramController extends Controller
             unset($body['forceOpen']);
         }
         else{
-            $tmpMsg = 'Trade: ' . $tradeType . ', Current: ' .floatval($epic['offer']) . ', Entry: ' . floatval($entryPoint) . ', TP1: ' . floatval($takeProfits[0]); 
-            (new WhatsappController)->sendWhatsapp('MISSED TRADE, ' . $tmpMsg, $messageCollection);
+            // $tmpMsg = 'Trade: ' . $tradeType . ', Current: ' .floatval($epic['offer']) . ', Entry: ' . floatval($entryPoint) . ', TP1: ' . floatval($takeProfits[0]); 
+            (new WhatsappController)->sendWhatsapp('MISSED TRADE, ' . $msgTemplate, $messageCollection);
             $messageCollection->action = 'REJECTED';
             $messageCollection->save();
             return;
         }
-        $tmpMsg = 'Trade: ' . $tradeType . ', Current: ' .floatval($epic['offer']) . ', Entry: ' . floatval($entryPoint) . ', TP1: ' . floatval($takeProfits[0]) . ', API: ' . $apiPath; 
-        Log::info($tmpMsg);
+        // $tmpMsg = 'Trade: ' . $tradeType . ', Current: ' .floatval($epic['offer']) . ', Entry: ' . floatval($entryPoint) . ', TP1: ' . floatval($takeProfits[0]) . ', API: ' . $apiPath; 
+        // Log::info($tmpMsg);
 
         $takeProfits[] = $takeProfits[0]; // add additional TP to iterate +1
         $takeProfits[] = $takeProfits[0]; // add additional TP to iterate +1
@@ -204,7 +207,7 @@ class TelegramController extends Controller
 
                 //Send Whatsapp Message
                 // (new WhatsappController)->sendWhatsapp('Deal Status: ' .$ref->dealStatus . ', Reason: ' . $ref->reason . ', TTP: '.$tot_seconds, null);
-                (new WhatsappController)->sendWhatsapp('Deal Status: ' .$ref->dealStatus . ', Reason: ' . $ref->reason, null);
+                (new WhatsappController)->sendWhatsapp($ref->dealStatus . ' - ' . $msgTemplate . $ref->reason ? ', Reason: ' . $ref->reason : '', null);
 
             }
         }
