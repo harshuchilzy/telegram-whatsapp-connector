@@ -23,7 +23,7 @@ function formatDate(dateString){
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Meassages
+                Messages
             </h2>
         </template>
 
@@ -37,7 +37,7 @@ function formatDate(dateString){
                                 <thead class="text-xs text-black uppercase bg-gray-50 dark:bg-slate-700 dark:text-white">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
-                                            Derections
+                                            Directions
                                         </th>
                                         <th scope="col" class="px-6 py-3">
                                             Sender
