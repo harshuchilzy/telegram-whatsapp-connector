@@ -52,7 +52,7 @@ class WhatsappController extends Controller
             'model' => $collection !== null AND !is_string($collection) ? get_class($collection) : '',
             'model_id' => $collection!== null AND !is_string($collection) ? $collection->id : '',
             'action' => 'whatsapp',
-            'log' => json_encode($res),
+            'log' => $message,
             'status' => $response_data
         ]);
     }
