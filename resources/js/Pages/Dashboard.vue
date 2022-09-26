@@ -171,7 +171,7 @@ function formatCurrency(currencyCode) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="position in positions.positions" :key="position.id" class="dark:hover:text-white bg-white border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-slate-700/50">
+                                <tr v-for="position in positions" :key="position.id" class="dark:hover:text-white bg-white border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-slate-700/50">
                                     <th scope="row" class="px-6 py-4 font-medium text-black dark:text-dark whitespace-nowrap">
                                         {{ position.market.instrumentName }}
                                     </th>
