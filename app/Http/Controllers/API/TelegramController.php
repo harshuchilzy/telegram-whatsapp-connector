@@ -106,19 +106,22 @@ class TelegramController extends Controller
         ];
 
         // Sell
-        if($tradeType == 'SELL' AND (floatval($epic['bid']) < floatval($entryPoint) AND floatval($entryPoint) > floatval($takeProfits[0])) ){ //QUESTION THIS
+        if($tradeType == 'SELL' AND (floatval($epic['bid']) < floatval($entryPoint) AND floatval($epic['bid']) > floatval($takeProfits[0])) ){ //QUESTION THIS
             $apiPath = '/positions/otc';
             $body['orderType'] = 'LIMIT';
+            $body['level'] = floatval($epic['bid']); // Q2
         }elseif($tradeType == 'SELL' AND (floatval($epic['bid']) > floatval($entryPoint))){
             $body['type'] = 'STOP';
             $body['timeInForce'] = "GOOD_TILL_CANCELLED";
             $apiPath = '/workingorders/otc';
+            unset($body['forceOpen']);
         }
         // Buy
         // 1. Works when entry is larger than current value
         elseif($tradeType == 'BUY' AND (floatval($epic['offer']) > floatval($entryPoint) and floatval($epic['offer']) < floatval($takeProfits[0]))){
             $apiPath = '/positions/otc';
             $body['orderType'] = 'LIMIT';
+            $body['level'] = floatval($epic['offer']); // Q1
         }elseif($tradeType == 'BUY' AND (floatval($epic['offer'] < floatval($entryPoint)))){
             $apiPath = '/workingorders/otc';
             $body['type'] = 'STOP';
@@ -171,18 +174,19 @@ class TelegramController extends Controller
                 $body = $dealConfirmation->body();
                 $body = json_decode($body);
 
-                
-
                 $this->saveToAction($messageCollection, 'igAPI', $dealConfirmation->body(), $body->dealStatus, $messageCollection);
                 
                 // $created_time = $messageCollection->created_at;
+                
+
+                $messageCollection->action = $body->dealStatus;
+                $messageCollection->save();
+
                 $updated_time = $messageCollection->updated_at;
                 $tot_seconds =  $updated_time->diffInMilliseconds(Carbon::now());
 
                 //Send Whatsapp Message
                 (new WhatsappController)->sendWhatsapp('Deal Status: ' .$body->dealStatus . ', Reason: ' . $body->reason . ', TTP: '.$tot_seconds, $messageCollection);
-                $messageCollection->action = $body->dealStatus;
-                $messageCollection->save();
 
                 //Replicating the message
                 // $messageCollection = $messageCollection->replicate();
