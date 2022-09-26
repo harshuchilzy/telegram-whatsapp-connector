@@ -156,25 +156,18 @@ class TelegramController extends Controller
                 $body['limitLevel'] = number_format($profit, 4);
             }
 
-            Log::info('Looping');
-            Log::info($body);
+            // Log::info('Looping');
+            // Log::info($body);
 
-            
-
+    
             $response = Http::withHeaders($headers)->withToken($token)->post(setting('igPathUrl').$apiPath, $body);
             $tradeBody = $response->body();
             $tradeBody = json_decode($tradeBody);
 
-            if($sendTrades > 0){
-                $messageCollection = $messageCollection->replicate();
-                $messageCollection->created_at = Carbon::now();
-                $messageCollection->save();
-            }
-
             if(!empty($tradeBody->errorCode)){
                 (new WhatsappController)->sendWhatsapp('ERROR IN TRADE ' . $tradeBody->errorCode, $messageCollection);
                 $this->saveToAction($messageCollection, 'igAPI', $tradeBody->errorCode, 'trade failed');
-                $messageCollection->action = $tradeBody->errorCode;
+                $messageCollection->action = $messageCollection->action ? $messageCollection->action . ', ' . $tradeBody->errorCode : $tradeBody->errorCode;
                 $messageCollection->save();
             }else{
                 $dealRef = $tradeBody->dealReference;
@@ -183,9 +176,9 @@ class TelegramController extends Controller
                 $dealConfirmation[] = $confirmation;
 
                 if($confirmation->dealStatus == 'REJECTED'){
-                    $messageCollection->action = $confirmation->reason;
+                    $messageCollection->action = $profit . $messageCollection->action ? $messageCollection->action . ', ' . $confirmation->reason : $confirmation->reason;
                 }else{
-                    $messageCollection->action = $confirmation->dealStatus;
+                    $messageCollection->action = $messageCollection->action ? $messageCollection->action . ', ' . $confirmation->dealStatus : $confirmation->dealStatus;
                 }
                 $messageCollection->save();
             }
