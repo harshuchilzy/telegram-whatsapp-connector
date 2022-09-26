@@ -32,14 +32,15 @@ class TelegramController extends Controller
         if($type == 'incoming-telegram'){
             $content = $request->get('content');
             event(new TelegramEvent($content));
+            $messageText = str_replace('*', '', $content['text']);
             $message = Message::create([
                 'direction' => 'incoming',
                 'sender' => $content['phone'],
-                'message' => $content['text'],
+                'message' => $messageText,
                 'status' => 'rejected'
             ]);
 
-            $this->doTrade($content['text'], $message);
+            $this->doTrade($messageText, $message);
             
             return response('success', 200);
         }elseif($type == 'qr'){
