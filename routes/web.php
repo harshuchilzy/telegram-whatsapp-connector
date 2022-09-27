@@ -30,13 +30,15 @@ Route::get('/', function () {
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function(){
     
     Route::get('/', [\App\Http\Controllers\FrontendController::class, 'dashboard'])->name('dashboard');
+    Route::get('/ig-accounts', [\App\Http\Controllers\FrontendController::class, 'fetchAccounts'])->name('dashboard.ig.accounts');
+    Route::get('/ig-account/trade/{path}', [\App\Http\Controllers\FrontendController::class, 'fetchCurrentTrades'])->name('dashboard.ig.history');
+
+
 
     Route::get('/messages', [\App\Http\Controllers\FrontendController::class, 'messages'])->name('messages');
 
     Route::get('profile', [\App\Http\Controllers\UserController::class, 'profile'])->name('user.profile');
     Route::put('profile_update', [\App\Http\Controllers\UserController::class, 'update'])->name('user.profile.update');
-
-    
 
     Route::post('/tokens/generate', function (Request $request) {
         $token = $request->user()->createToken($request->token_name);

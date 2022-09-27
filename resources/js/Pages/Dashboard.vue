@@ -2,12 +2,8 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
 import Swal from 'sweetalert2'
+import { ref } from 'vue';
 
-const props = defineProps({
-    accounts: Object,
-    orders: Object,
-    positions: Object
-})
 
 function formatCurrency(currencyCode) {
     if (currencyCode == 'USD') {
@@ -20,6 +16,29 @@ function formatCurrency(currencyCode) {
         return currencyCode;
     }
 }
+
+const accounts = ref({});
+async function fetchAccounts(){
+    var tempAccounts = await axios.get(route('dashboard.ig.accounts'));
+    accounts.value = tempAccounts.data
+}
+
+const workingOrders = ref({});
+async function fetchWorkingOrders(path){
+    var tempWorkingOrders = await axios.get(route('dashboard.ig.history', path));
+    workingOrders.value = tempWorkingOrders.data;
+}
+
+const runningOrders = ref({});
+async function fetchPositionOrders(path){
+    var tempPositionOrders = await axios.get(route('dashboard.ig.history', path));
+    runningOrders.value = tempPositionOrders.data;
+}
+
+
+fetchAccounts();
+fetchWorkingOrders('workingorders');
+fetchPositionOrders('positions');
 
 </script>
 
@@ -36,7 +55,7 @@ function formatCurrency(currencyCode) {
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-6 mb-5">
-                <div class="overflow-hidden grid grid-cols-3 gap-4">
+                <div class="overflow-hidden grid grid-flow-col-dense gap-4">
                     <div v-for="account in accounts.accounts" :key="account.accountId">
                         <div class="bg-white p-5 m-5 shadow-lg sm:rounded-lg">
                             <p class="text-center bg-emerald-400 rounded-full"><small class="p-1 text-white uppercase">Market Status - <b class="text-white">{{ account.status }}</b></small></p>
@@ -66,11 +85,10 @@ function formatCurrency(currencyCode) {
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div  class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-3">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <h1 class="mb-4">Current Working Orders</h1>
@@ -104,10 +122,11 @@ function formatCurrency(currencyCode) {
                                     <th scope="col" class="px-6 py-3">
                                         GOOD TILL
                                     </th>
+                                    <th scope="col" class="px-6 py-3">Created at</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="order in orders.workingOrders" :key="order.id" class="dark:hover:text-white bg-white border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-slate-700/50">
+                                <tr v-for="order in workingOrders.workingOrders" :key="order.id" class="dark:hover:text-white bg-white border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-slate-700/50">
                                     <th scope="row" class="px-6 py-4 font-medium text-black dark:text-dark whitespace-nowrap">
                                         {{ order.marketData.instrumentName }}
                                     </th>
@@ -135,12 +154,14 @@ function formatCurrency(currencyCode) {
                                     <td class="px-6 py-4">
                                         {{ order.workingOrderData.goodTill }}
                                     </td>
+                                    <td class="px-6 py-4">
+                                        {{ order.workingOrderData.createdDate }}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <h1 class="mb-4">Current Positions</h1>
@@ -168,10 +189,11 @@ function formatCurrency(currencyCode) {
                                     <th scope="col" class="px-6 py-3">
                                         LIMIT
                                     </th>
+                                    <th scope="col" class="px-6 py-3">Created at</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="position in positions" :key="position.id" class="dark:hover:text-white bg-white border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-slate-700/50">
+                                <tr v-for="position in runningOrders.positions" :key="position.id" class="dark:hover:text-white bg-white border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-slate-700/50">
                                     <th scope="row" class="px-6 py-4 font-medium text-black dark:text-dark whitespace-nowrap">
                                         {{ position.market.instrumentName }}
                                     </th>
@@ -192,6 +214,9 @@ function formatCurrency(currencyCode) {
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ position.position.limitLevel }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ position.position.createdDate }}
                                     </td>
                                 </tr>
                             </tbody>

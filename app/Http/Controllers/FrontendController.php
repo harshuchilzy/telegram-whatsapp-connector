@@ -43,17 +43,29 @@ class FrontendController extends Controller
         if(empty(setting('igPathUrl')) and empty(setting('igUsername')) and empty(setting('igPassword')) and empty(setting('igApiKey'))){
             return redirect()->route('settings');
         }
-        $account_headers = $this->headers;
-        $accessToken = $this->authenticateIG();
-        $accounts = Http::withHeaders($account_headers)->withToken($accessToken)->get(setting('igPathUrl').'/accounts');
-        $orders = Http::withHeaders($account_headers)->withToken($accessToken)->get(setting('igPathUrl').'/workingorders');
-        // $positions = Http::withHeaders($acoount_headers)->withToken($accessToken)->get(setting('igPathUrl').'/positions');
+        // $account_headers = $this->headers;
+        // $accessToken = $this->authenticateIG();
+        // $accounts = Http::withHeaders($account_headers)->withToken($accessToken)->get(setting('igPathUrl').'/accounts');
+        // $orders = Http::withHeaders($account_headers)->withToken($accessToken)->get(setting('igPathUrl').'/workingorders');
+        // $positions = Http::withHeaders($account_headers)->withToken($accessToken)->get(setting('igPathUrl').'/positions');
         
-        return inertia()->render('Dashboard', [
-            'accounts' => json_decode($accounts->body()),
-            'orders' => json_decode($orders->body()),
-            // 'positions' => json_decode($positions->body()),
-        ]);
+        return inertia()->render('Dashboard');
+    }
+
+    public function fetchAccounts(Request $request)
+    {
+        $accessToken = $this->authenticateIG();
+        $response = Http::withHeaders($this->headers)->withToken($accessToken)->get(setting('igPathUrl').'/accounts' );
+        $accounts = json_decode($response->body());
+        return response()->json($accounts);
+    }
+
+    public function fetchCurrentTrades($path){
+        // $path = $request->input('path');
+        $accessToken = $this->authenticateIG();
+        $response = Http::withHeaders($this->headers)->withToken($accessToken)->get(setting('igPathUrl').'/' . $path);
+        $data = json_decode($response->body());
+        return response()->json($data);
     }
     
     public function messages(){
