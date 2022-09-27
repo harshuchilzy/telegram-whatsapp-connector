@@ -158,16 +158,15 @@ class TelegramController extends Controller
 
             // Log::info('Looping');
             // Log::info($body);
-
     
             $response = Http::withHeaders($headers)->withToken($token)->post(setting('igPathUrl').$apiPath, $body);
             $tradeBody = $response->body();
             $tradeBody = json_decode($tradeBody);
-
+            $messageCollection->action = ($messageCollection->action == 'unidentified' ? '' : $messageCollection->action); //Clear the action column
             if(!empty($tradeBody->errorCode)){
                 (new WhatsappController)->sendWhatsapp('ERROR IN TRADE ' . $tradeBody->errorCode, $messageCollection);
                 $this->saveToAction($messageCollection, 'igAPI', $tradeBody->errorCode, 'trade failed');
-                $messageCollection->action = $messageCollection->action ? $messageCollection->action . ', ' . $tradeBody->errorCode : $tradeBody->errorCode;
+                $messageCollection->action = $messageCollection->action ? $messageCollection->action . ', ' . 'TP: ' .$profit . ' ' . $tradeBody->errorCode : 'TP: ' .$profit . ' ' . $tradeBody->errorCode;
                 $messageCollection->save();
             }else{
                 $dealRef = $tradeBody->dealReference;
@@ -176,9 +175,9 @@ class TelegramController extends Controller
                 $dealConfirmation[] = $confirmation;
 
                 if($confirmation->dealStatus == 'REJECTED'){
-                    $messageCollection->action = $profit . $messageCollection->action ? $messageCollection->action . ', ' . $confirmation->reason : $confirmation->reason;
+                    $messageCollection->action = $messageCollection->action ? $messageCollection->action . ', ' . 'TP: ' .$profit . ' ' . $confirmation->reason : 'TP: ' .$profit . ' ' .$confirmation->reason;
                 }else{
-                    $messageCollection->action = $messageCollection->action ? $messageCollection->action . ', ' . $confirmation->dealStatus : $confirmation->dealStatus;
+                    $messageCollection->action = $messageCollection->action ? $messageCollection->action . ', ' . 'TP: ' .$profit . ' ' . $confirmation->dealStatus : 'TP: ' .$profit . ' ' . $confirmation->dealStatus;
                 }
                 $messageCollection->save();
             }
@@ -200,7 +199,7 @@ class TelegramController extends Controller
 
                 //Send Whatsapp Message
                 // (new WhatsappController)->sendWhatsapp('Deal Status: ' .$ref->dealStatus . ', Reason: ' . $ref->reason . ', TTP: '.$tot_seconds, null);
-                (new WhatsappController)->sendWhatsapp($ref->dealStatus . ' - ' . $msgTemplate . $ref->reason ? ', Reason: ' . $ref->reason : '', null);
+                (new WhatsappController)->sendWhatsapp($ref->dealStatus . ' - ' . $msgTemplate . ($ref->reason ? ', Reason: ' . $ref->reason : ''), null);
 
             }
         }
