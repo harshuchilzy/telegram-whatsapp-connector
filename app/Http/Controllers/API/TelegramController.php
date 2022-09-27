@@ -146,8 +146,7 @@ class TelegramController extends Controller
             if($tradeType == 'BUY'){
                 $marketEntry = $market['offer'];
             }else{
-                $marketEntry = $market['bif'];
-
+                $marketEntry = $market['bid'];
             }
             $errorMsg = $body['level'] > floatval($entryPoint) ? floatval($entryPoint) . ' is higher than market ' . $marketEntry : floatval($entryPoint) . ' is lower than market ' . $marketEntry;
             $errorMsgTP =  floatval($takeProfits[0]) > $body['level'] ? ' and TP1 '.floatval($takeProfits[0]).' is higher than market ' . $body['level'] : ' and TP1 '.floatval($takeProfits[0]).' is lower than market ' . $body['level'];
@@ -307,7 +306,7 @@ class TelegramController extends Controller
     {
         $actionData = Action::create([
             'model' => $collection!== null ? get_class($collection) : '',
-            'model_id' => $collection!== null ? $collection->id : '',
+            'model_id' => $collection!== null ? $collection->id : 0,
             'action' => $action,
             'log' => $log,
             'status' => $status
