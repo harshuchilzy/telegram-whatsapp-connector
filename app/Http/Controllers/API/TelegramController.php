@@ -55,6 +55,10 @@ class TelegramController extends Controller
     {
         $filtered = $this->filter_data($message);
 
+        if(empty($filtered)){
+            return;
+        }
+
         $currency = array_filter($filtered, function($data){
             return $data['type'] == 'currency';
         });
@@ -312,16 +316,18 @@ class TelegramController extends Controller
 
     public function test()
     {
-        // $msg = 'EURUSD SELL @ 0.9960
+        $msg = 'EURUSD SELL @ 0.9960
 
-        // TP: 0.9956 (scalper)
-        // TP: 0.9953 (intraday)
-        // TP: 0.9955 (swing)
-        // SL: 0.9978
+        TP: 0.9956 (scalper)
+        TP: 0.9953 (intraday)
+        TP: 0.9955 (swing)
+        SL: 0.9978
 
-        // ▪️Use money management 2-3%';
+        ▪️Use money management 2-3%';
 
-        // $filtered = $this->filter_data($msg);
+        $filtered = $this->filter_data('test');
+
+        print_r(empty($filtered));
 
         // $stopLosses = array_filter($filtered, function($data){
         //     return $data['type'] == 'stop-loss';
@@ -360,14 +366,14 @@ class TelegramController extends Controller
         // print_r($entryPoints[0]);
         // echo '</pre>';
 
-        $message = Message::get()->first();
-        $create_time = $message->created_at->format('H:i:s');
-        $update_time = $message->updated_at->format('H:i:s');
-        $duration =  intval($update_time) - intval($create_time);
+        // $message = Message::get()->first();
+        // $create_time = $message->created_at->format('H:i:s');
+        // $update_time = $message->updated_at->format('H:i:s');
+        // $duration =  intval($update_time) - intval($create_time);
 
-        // $create_time = $message->created_at;
-        // $update_time = $message->updated_at;
-        // $duration =  strtotime($update_time) - strtotime($create_time);
-        dd ($duration/3600);
+        // // $create_time = $message->created_at;
+        // // $update_time = $message->updated_at;
+        // // $duration =  strtotime($update_time) - strtotime($create_time);
+        // dd ($duration/3600);
     }
 }
