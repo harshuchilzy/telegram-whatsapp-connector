@@ -145,7 +145,7 @@ class TelegramController extends Controller
             $errorMsg = $body['level'] > floatval($entryPoint) ? floatval($entryPoint) . ' is higher than market ' . $marketEntry : floatval($entryPoint) . ' is lower than market ' . $marketEntry;
             $errorMsgTP =  floatval($takeProfits[0]) > $body['level'] ? ' and TP1 '.floatval($takeProfits[0]).' is higher than market ' . $body['level'] : ' and TP1 '.floatval($takeProfits[0]).' is lower than market ' . $body['level'];
             // $tmpMsg = 'Trade: ' . $tradeType . ', Current: ' . $body['level'] . ', Entry: ' . floatval($entryPoint) . ', TP1: ' . floatval($takeProfits[0]); 
-            (new WhatsappController)->sendWhatsapp('MISSED TRADE, ' . $msgTemplate, $messageCollection);
+            (new WhatsappController)->sendWhatsapp('MISSED TRADE, ' . $msgTemplate . ' | ' . $errorMsg . $errorMsgTP, $messageCollection);
             $messageCollection->action = 'REJECTED | MISSED TRADE . ' . $msgTemplate . ' | ' . $errorMsg . $errorMsgTP;
             $messageCollection->save();
             return;
