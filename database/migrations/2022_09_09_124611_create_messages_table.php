@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('direction')->nullable();
             $table->string('sender')->nullable();
             $table->text('message')->nullable();
-            $table->string('action')->nullable();
+            $table->text('action')->nullable();
             $table->timestamps(6);
         });
     }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('model')->nullable();
             $table->bigInteger('model_id')->nullable();
-            $table->string('action')->nullable();
+            $table->text('action')->nullable();
             $table->text('log')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();

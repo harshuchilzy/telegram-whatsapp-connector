@@ -61,8 +61,8 @@ class TelegramController extends Controller
         $currency = array_values($currency)[0]['data'];
         
         $token = $this->getIGToken();
-        $epic = $this->pickMarketByCurrency($currency, $token);
-
+        $market = $this->pickMarketByCurrency($currency, $token);
+        Log::info($market);
         $tradeFilters = array_filter($filtered, function($data){
             return $data['type'] == 'trade';
         });
@@ -96,7 +96,7 @@ class TelegramController extends Controller
         }
 
         $body = [
-            "epic" => $epic['epic'],
+            "epic" => $market['epic'],
             "expiry" => "-",
             "direction" => $tradeType,
             "size" => '1',
@@ -106,18 +106,18 @@ class TelegramController extends Controller
             "stopLevel" => number_format($stopLoss, 4), //stop loss
             "forceOpen" => false,
             // "limitLevel" => $takeprofit, //take profit
-            "currencyCode" => setting('igCurrency')
+            "currencyCode" => $market['instrumentCurrency']
         ];
 
         $msgTemplate = $currency . ' ' . $tradeType . ' @ ' . number_format($entryPoint, 4);
 
 
         // Sell
-        if($tradeType == 'SELL' AND (floatval($epic['bid']) < floatval($entryPoint) AND floatval($epic['bid']) > floatval($takeProfits[0])) ){ //QUESTION THIS
+        if($tradeType == 'SELL' AND (floatval($market['bid']) < floatval($entryPoint) AND floatval($market['bid']) > floatval($takeProfits[0])) ){ //QUESTION THIS
             $apiPath = '/positions/otc';
             $body['orderType'] = 'LIMIT';
-            $body['level'] = floatval($epic['bid']); // Q2
-        }elseif($tradeType == 'SELL' AND (floatval($epic['bid']) > floatval($entryPoint))){
+            $body['level'] = floatval($market['bid']); // Q2
+        }elseif($tradeType == 'SELL' AND (floatval($market['bid']) > floatval($entryPoint))){
             $body['type'] = 'STOP';
             $body['timeInForce'] = "GOOD_TILL_CANCELLED";
             $apiPath = '/workingorders/otc';
@@ -126,11 +126,11 @@ class TelegramController extends Controller
 
         // Buy
         // 1. Works when entry is larger than current value
-        elseif($tradeType == 'BUY' AND (floatval($epic['offer']) > floatval($entryPoint) and floatval($epic['offer']) < floatval($takeProfits[0]))){
+        elseif($tradeType == 'BUY' AND (floatval($market['offer']) > floatval($entryPoint) and floatval($market['offer']) < floatval($takeProfits[0]))){
             $apiPath = '/positions/otc';
             $body['orderType'] = 'LIMIT';
-            $body['level'] = floatval($epic['offer']); // Q1
-        }elseif($tradeType == 'BUY' AND (floatval($epic['offer'] < floatval($entryPoint)))){
+            $body['level'] = floatval($market['offer']); // Q1
+        }elseif($tradeType == 'BUY' AND (floatval($market['offer'] < floatval($entryPoint)))){
             $apiPath = '/workingorders/otc';
             $body['type'] = 'STOP';
             $body['timeInForce'] = 'GOOD_TILL_CANCELLED';
@@ -274,11 +274,14 @@ class TelegramController extends Controller
             foreach($market as $data){
                 $epic = $data->epic;
                 if(str_contains($epic, 'CFD')){
+                    $instrumentCurrency = explode('/', $data->instrumentName);
+                    $instrumentCurrency = end($instrumentCurrency);
                     $epics[] = array(
                         'epic' => $epic,
                         'bid' => $data->bid, //current value for sell
                         'offer' => $data->offer, //current value for buy
-                        'market_status' => $data->marketStatus
+                        'market_status' => $data->marketStatus,
+                        'instrumentCurrency' => $instrumentCurrency
                     );
                 }
             }
