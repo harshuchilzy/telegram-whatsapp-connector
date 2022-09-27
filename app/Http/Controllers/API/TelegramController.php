@@ -139,7 +139,7 @@ class TelegramController extends Controller
         else{
             // $tmpMsg = 'Trade: ' . $tradeType . ', Current: ' .floatval($epic['offer']) . ', Entry: ' . floatval($entryPoint) . ', TP1: ' . floatval($takeProfits[0]); 
             (new WhatsappController)->sendWhatsapp('MISSED TRADE, ' . $msgTemplate, $messageCollection);
-            $messageCollection->action = 'REJECTED';
+            $messageCollection->action = 'REJECTED | MISSED TREADE';
             $messageCollection->save();
             return;
         }
