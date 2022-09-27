@@ -31,7 +31,6 @@ class TelegramController extends Controller
         $type = $request->get('type');
         if($type == 'incoming-telegram'){
             $content = $request->get('content');
-            event(new TelegramEvent($content));
             $messageText = str_replace('*', '', $content['text']);
             $message = Message::create([
                 'direction' => 'incoming',
@@ -41,6 +40,7 @@ class TelegramController extends Controller
             ]);
 
             $this->doTrade($messageText, $message);
+            event(new TelegramEvent($content));
             
             return response('success', 200);
         }elseif($type == 'qr'){
@@ -80,10 +80,13 @@ class TelegramController extends Controller
         $stopLosses = array_filter($filtered, function($data){
             return $data['type'] == 'stop-loss';
         });
+
         foreach($stopLosses as $sl){
             $stopLostPoints = $this->filterTradeValues($message, $sl['data']);
+            if($stopLostPoints){ break; }
         }
         $stopLoss = $stopLostPoints[0]; //gives the stop loss value "1.2211" etc
+        Log::info($stopLoss);
 
         $profitFilters = array_filter($filtered, function($data){
             return $data['type'] == 'take-profit';
