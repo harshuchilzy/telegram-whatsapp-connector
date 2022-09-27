@@ -34,7 +34,7 @@ class TelegramController extends Controller
             $messageText = str_replace('*', '', $content['text']);
             $message = Message::create([
                 'direction' => 'incoming',
-                'sender' => $content['phone'],
+                'sender' => isset($content['phone']) ? $content['phone'] : '',
                 'message' => $messageText,
                 'action' => 'unidentified'
             ]);
@@ -62,6 +62,9 @@ class TelegramController extends Controller
         $currency = array_filter($filtered, function($data){
             return $data['type'] == 'currency';
         });
+        if(empty($currency)){
+            return;
+        }
         $currency = array_values($currency)[0]['data'];
         
         $token = $this->getIGToken();
