@@ -70,7 +70,7 @@ class FrontendController extends Controller
     
     public function messages(){
         $messages = Message::where('action', '!=', 'accepted')->where('action', '!=', 'unidentified')->orderBy('created_at', 'desc')->paginate(15);
-        $accepted = Message::where('action', 'accepted')->where('action', '!=', 'unidentified')->orderBy('created_at', 'desc')->paginate(15);
+        $accepted = Message::where('action', 'LIKE' , '%accepted%')->where('action', '!=', 'unidentified')->orderBy('created_at', 'desc')->paginate(15);
         $unidentified = Message::where('action', 'unidentified')->orderBy('created_at', 'desc')->paginate(15);
 
         return inertia()->render('Messages/Index', [
