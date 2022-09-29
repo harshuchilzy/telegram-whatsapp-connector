@@ -82,8 +82,9 @@ class TelegramController extends Controller
         foreach($entryFilters as $entry){
             $entryPoints = $this->filterTradeValues($message, $entry['data']);
         }
-        $entryPoint = $entryPoints[0]; //give the entry value "1.2233" etc
-
+        if(!empty($entryPoints) and is_array($entryPoints)){
+            $entryPoint = $entryPoints[0]; //give the entry value "1.2233" etc
+        }
         $stopLosses = array_filter($filtered, function($data){
             return $data['type'] == 'stop-loss';
         });
@@ -100,6 +101,12 @@ class TelegramController extends Controller
         });
         foreach($profitFilters as $tp){
             $takeProfits = $this->filterTradeValues($message, $tp['data']);
+        }
+
+        if($tradeType == 'SELL' and empty($entryPoint)){
+            $entryPoint = $market['bid'];
+        }elseif($tradeType == 'BUY' and empty($entryPoint)){
+            $entryPoint = $market['offer'];
         }
 
         $body = [
@@ -146,8 +153,7 @@ class TelegramController extends Controller
             if($tradeType == 'BUY'){
                 $marketEntry = $market['offer'];
             }else{
-                $marketEntry = $market['bif'];
-
+                $marketEntry = $market['bid'];
             }
             $errorMsg = $body['level'] > floatval($entryPoint) ? floatval($entryPoint) . ' is higher than market ' . $marketEntry : floatval($entryPoint) . ' is lower than market ' . $marketEntry;
             $errorMsgTP =  floatval($takeProfits[0]) > $body['level'] ? ' and TP1 '.floatval($takeProfits[0]).' is higher than market ' . $body['level'] : ' and TP1 '.floatval($takeProfits[0]).' is lower than market ' . $body['level'];
@@ -319,25 +325,21 @@ class TelegramController extends Controller
 
     public function test()
     {
-        $msg = 'EURUSD SELL @ 0.9960
+        $msg = 'gbpjpy sell 156.043 - 156.343 sl : 156.743 tp : 155.843 tp: 155.243';
 
-        TP: 0.9956 (scalper)
-        TP: 0.9953 (intraday)
-        TP: 0.9955 (swing)
-        SL: 0.9978
+        $filtered = $this->filter_data($msg);
 
-        ▪️Use money management 2-3%';
+        // echo '<pre>';
+        // print_r(($filtered));
+        // echo '</pre>';
 
-        $filtered = $this->filter_data('test');
 
-        print_r(empty($filtered));
-
-        // $stopLosses = array_filter($filtered, function($data){
-        //     return $data['type'] == 'stop-loss';
-        // });
-        // foreach($stopLosses as $sl){
-        //     $stopLostPoints = $this->filterTradeValues($msg, $sl['data']);
-        // }
+        $stopLosses = array_filter($filtered, function($data){
+            return $data['type'] == 'stop-loss';
+        });
+        foreach($stopLosses as $sl){
+            $stopLostPoints = $this->filterTradeValues($msg, $sl['data']);
+        }
 
         // $tradeFilters = array_filter($filtered, function($data){
         //     return $data['type'] == 'trade';
@@ -361,9 +363,9 @@ class TelegramController extends Controller
         //     $takeProfits = $this->filterTradeValues($msg, $tp['data']);
         // }
             
-        // echo '<pre>';
-        // print_r($takeProfits);
-        // echo '</pre>';
+        echo '<pre>';
+        print_r($stopLostPoints);
+        echo '</pre>';
         
         // echo '<pre>';
         // print_r($entryPoints[0]);
