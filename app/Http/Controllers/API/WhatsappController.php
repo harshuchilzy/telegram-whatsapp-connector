@@ -50,7 +50,7 @@ class WhatsappController extends Controller
 
         $actionData = Action::create([
             'model' => $collection !== null AND !is_string($collection) ? get_class($collection) : '',
-            'model_id' => $collection!== null AND !is_string($collection) ? $collection->id : '',
+            'model_id' => $collection!== null AND !is_string($collection) ? $collection->id : 0,
             'action' => 'whatsapp',
             'log' => $message,
             'status' => $response_data

@@ -313,7 +313,7 @@ class TelegramController extends Controller
     {
         $actionData = Action::create([
             'model' => $collection!== null ? get_class($collection) : '',
-            'model_id' => $collection!== null ? $collection->id : '',
+            'model_id' => $collection!== null ? $collection->id : 0,
             'action' => $action,
             'log' => $log,
             'status' => $status
