@@ -126,11 +126,11 @@ class TelegramController extends Controller
         $msgTemplate = $currency . ' ' . $tradeType . ' @ ' . number_format($entryPoint, 4,'.', '');
 
         // Sell
-        if($tradeType == 'SELL' AND (floatval($market['bid']) < floatval($entryPoint) AND floatval($market['bid']) > floatval($takeProfits[0])) ){ //QUESTION THIS
+        if($tradeType == 'SELL' AND (floatval($market['bid']) >= floatval($entryPoint) AND floatval($market['bid']) > floatval($takeProfits[0])) ){ //QUESTION THIS
             $apiPath = '/positions/otc';
             $body['orderType'] = 'LIMIT';
             $body['level'] = floatval($market['bid']); // Q2
-        }elseif($tradeType == 'SELL' AND (floatval($market['bid']) > floatval($entryPoint))){
+        }elseif($tradeType == 'SELL' AND (floatval($market['bid']) >= floatval($entryPoint))){
             $body['type'] = 'STOP';
             $body['timeInForce'] = "GOOD_TILL_CANCELLED";
             $apiPath = '/workingorders/otc';
@@ -139,11 +139,11 @@ class TelegramController extends Controller
 
         // Buy
         // 1. Works when entry is larger than current value
-        elseif($tradeType == 'BUY' AND (floatval($market['offer']) > floatval($entryPoint) and floatval($market['offer']) < floatval($takeProfits[0]))){
+        elseif($tradeType == 'BUY' AND (floatval($market['offer']) >= floatval($entryPoint) and floatval($market['offer']) < floatval($takeProfits[0]))){
             $apiPath = '/positions/otc';
             $body['orderType'] = 'LIMIT';
             $body['level'] = floatval($market['offer']); // Q1
-        }elseif($tradeType == 'BUY' AND (floatval($market['offer'] < floatval($entryPoint)))){
+        }elseif($tradeType == 'BUY' AND (floatval($market['offer'] <= floatval($entryPoint)))){
             $apiPath = '/workingorders/otc';
             $body['type'] = 'STOP';
             $body['timeInForce'] = 'GOOD_TILL_CANCELLED';
@@ -155,8 +155,8 @@ class TelegramController extends Controller
             }else{
                 $marketEntry = $market['bid'];
             }
-            $errorMsg = $body['level'] > floatval($entryPoint) ? floatval($entryPoint) . ' is higher than market ' . $marketEntry : floatval($entryPoint) . ' is lower than market ' . $marketEntry;
-            $errorMsgTP =  floatval($takeProfits[0]) > $body['level'] ? ' and TP1 '.floatval($takeProfits[0]).' is higher than market ' . $body['level'] : ' and TP1 '.floatval($takeProfits[0]).' is lower than market ' . $body['level'];
+            $errorMsg = floatval($body['level']) > floatval($entryPoint) ? floatval($entryPoint) . ' is higher than market ' . $marketEntry : floatval($entryPoint) . ' is lower than market ' . $marketEntry;
+            $errorMsgTP =  floatval($takeProfits[0]) > floatval($body['level']) ? ' and TP1 '.floatval($takeProfits[0]).' is higher than market ' . $body['level'] : ' and TP1 '.floatval($takeProfits[0]).' is lower than market ' . $body['level'];
             // $tmpMsg = 'Trade: ' . $tradeType . ', Current: ' . $body['level'] . ', Entry: ' . floatval($entryPoint) . ', TP1: ' . floatval($takeProfits[0]); 
             (new WhatsappController)->sendWhatsapp('MISSED TRADE, ' . $msgTemplate . ' | ' . $errorMsg . $errorMsgTP, $messageCollection);
             $messageCollection->action = 'REJECTED | MISSED TRADE . ' . $msgTemplate . ' | ' . $errorMsg . $errorMsgTP;
