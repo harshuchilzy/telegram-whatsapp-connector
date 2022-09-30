@@ -115,15 +115,15 @@ class TelegramController extends Controller
             "direction" => $tradeType,
             "size" => '1',
             // "orderType" => "LIMIT", // Market
-            "level" => number_format($entryPoint, 4),
+            "level" => number_format($entryPoint, 4, '.', ''),
             "guaranteedStop" => false,
-            "stopLevel" => number_format($stopLoss, 4), //stop loss
+            "stopLevel" => number_format($stopLoss, 4, '.', ''), //stop loss
             "forceOpen" => false,
             // "limitLevel" => $takeprofit, //take profit
-            "currencyCode" => $market['instrumentCurrency']
+            "currencyCode" => $market['instrumentCurrency'] == 'Spot Goud' ? 'USD' : $market['instrumentCurrency']
         ];
 
-        $msgTemplate = $currency . ' ' . $tradeType . ' @ ' . number_format($entryPoint, 4);
+        $msgTemplate = $currency . ' ' . $tradeType . ' @ ' . number_format($entryPoint, 4,'.', '');
 
         // Sell
         if($tradeType == 'SELL' AND (floatval($market['bid']) < floatval($entryPoint) AND floatval($market['bid']) > floatval($takeProfits[0])) ){ //QUESTION THIS
@@ -174,13 +174,13 @@ class TelegramController extends Controller
         foreach($takeProfits as $profit){
             
             if($sendTrades >= 1){
-                $body['limitLevel'] = number_format($takeProfits[0], 4);
+                $body['limitLevel'] = number_format($takeProfits[0], 4,'.', '');
             }else{
-                $body['limitLevel'] = number_format($profit, 4);
+                $body['limitLevel'] = number_format($profit, 4,'.', '');
             }
 
-            // Log::info('Looping');
-            // Log::info($body);
+            Log::info('Looping');
+            Log::info($body);
     
             $response = Http::withHeaders($headers)->withToken($token)->post(setting('igPathUrl').$apiPath, $body);
             $tradeBody = $response->body();
@@ -262,6 +262,7 @@ class TelegramController extends Controller
             return null;
         }
         foreach($filteredData[0] as $key => $data){
+            $data = str_replace($needle, '', $data);
             $values[] = (float) filter_var($data, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);  
         }
         return $values;
@@ -325,7 +326,7 @@ class TelegramController extends Controller
 
     public function test()
     {
-        $msg = 'gbpjpy sell 156.043 - 156.343 sl : 156.743 tp : 155.843 tp: 155.243';
+        $msg = 'XAUUSD SELL NOW @ 1664-1667 SL : 1669 TP1 : 1651 TP2 : 1648';
 
         $filtered = $this->filter_data($msg);
 
@@ -356,12 +357,12 @@ class TelegramController extends Controller
         //     $entryPoints = $this->filterTradeValues($msg, $entry['data']);
         // }
 
-        // $profitFilters = array_filter($filtered, function($data){
-        //     return $data['type'] == 'take-profit';
-        // });
-        // foreach($profitFilters as $tp){
-        //     $takeProfits = $this->filterTradeValues($msg, $tp['data']);
-        // }
+        $profitFilters = array_filter($filtered, function($data){
+            return $data['type'] == 'take-profit';
+        });
+        foreach($profitFilters as $tp){
+            $takeProfits = $this->filterTradeValues($msg, $tp['data']);
+        }
             
         echo '<pre>';
         print_r($stopLostPoints);
